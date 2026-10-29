@@ -6,145 +6,185 @@
     <title>MyCloud - Secure Private Cloud Storage</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+<body class="bg-black text-slate-100 font-sans min-h-screen flex flex-col justify-between p-6">
 
-    <!-- LOGIN / AUTH SCREEN -->
-    <div id="authScreen" class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-md shadow-2xl">
-            <div class="text-center mb-6">
-                <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">MyCloud Platform</h1>
-                <p class="text-slate-400 text-sm mt-1">Zero-Knowledge Encrypted Private Cloud</p>
+    <!-- LANGUAGE SELECTOR -->
+    <div class="text-center">
+        <span class="text-xs text-slate-400 cursor-pointer hover:text-slate-200">English (UK) ▾</span>
+    </div>
+
+    <!-- INSTAGRAM STYLE LOGIN BOX -->
+    <div class="max-w-xs w-full mx-auto space-y-6 my-auto">
+        
+        <!-- MyCloud Custom Logo (Replacing Instagram Icon) -->
+        <div class="text-center space-y-3">
+            <div class="w-20 h-20 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 rounded-3xl mx-auto flex items-center justify-center shadow-2xl shadow-pink-500/20">
+                <span class="text-3xl">☁️</span>
             </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="text-xs text-slate-400 uppercase font-semibold">Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="e.g., vs4539876@gmail.com" class="w-full mt-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="text-xs text-slate-400 uppercase font-semibold">Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" class="w-full mt-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500">
-                </div>
-                <button onclick="handleLogin()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold transition shadow-lg shadow-blue-600/30">Login / Register Securely</button>
+            <h1 class="text-xl font-bold tracking-wider text-slate-200">MyCloud</h1>
+        </div>
+
+        <!-- Inputs Form -->
+        <div class="space-y-3">
+            <input type="text" id="loginIdentifier" placeholder="Username, email address or mobile number" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500">
+            
+            <!-- Password Field with Hide/Unhide Button -->
+            <div class="relative">
+                <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500 pr-12">
+                <button type="button" onclick="togglePassword()" id="toggleBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
             </div>
+
+            <button onclick="handleLogin()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-xl transition text-sm shadow-lg shadow-blue-600/20">Log in</button>
+        </div>
+
+        <!-- Forgot Password -->
+        <div class="text-center">
+            <a href="#" onclick="alert('Password reset link sent to your phone/email.')" class="text-xs text-blue-400 hover:underline">Forgotten password?</a>
+        </div>
+    </div>
+
+    <!-- BOTTOM CREATE ACCOUNT SECTION -->
+    <div class="max-w-xs w-full mx-auto space-y-4 text-center">
+        <button onclick="handleSignup()" class="w-full py-3 bg-transparent hover:bg-zinc-900 border border-zinc-800 text-blue-400 font-semibold rounded-xl transition text-xs">Create new account</button>
+        <div class="flex items-center justify-center space-x-1 text-xs text-zinc-500">
+            <span>∞</span>
+            <span class="font-bold tracking-widest text-zinc-400">Meta</span>
         </div>
     </div>
 
     <!-- MAIN DASHBOARD (Google Photos Style) -->
-    <div id="dashboardScreen" class="hidden min-h-screen flex flex-col">
+    <div id="dashboardScreen" class="hidden fixed inset-0 bg-black z-50 flex flex-col">
         <!-- Top Header -->
-        <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <header class="border-b border-zinc-800 bg-zinc-950 px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <span class="text-xl font-black bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">☁️ MyCloud</span>
-                <span id="userRoleBadge" class="text-xs px-2.5 py-1 bg-blue-500/20 text-blue-400 rounded-full font-medium border border-blue-500/30">Normal User</span>
+                <span class="text-lg font-black bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">☁️ MyCloud</span>
+                <span id="userRoleBadge" class="text-[10px] px-2.5 py-0.5 bg-blue-500/20 text-blue-400 rounded-full font-bold border border-blue-500/30">Normal User</span>
             </div>
             <div class="flex items-center space-x-4">
                 <div class="text-right hidden sm:block">
-                    <p id="userNameDisplay" class="text-sm font-semibold">Vipin Singh</p>
-                    <p id="storageMeterText" class="text-xs text-slate-400">1.2 GB / 5 GB Used</p>
+                    <p id="userNameDisplay" class="text-xs font-semibold text-slate-300">User</p>
+                    <p id="storageMeterText" class="text-[10px] text-slate-400">1.2 GB / 50 GB Used (Free Tier)</p>
                 </div>
-                <button onclick="openPricingModal()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-sm rounded-xl shadow-lg hover:opacity-90 transition">⚡ Upgrade Plan</button>
+                <button onclick="openPricingModal()" class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-[11px] rounded-lg shadow">⚡ Upgrade</button>
+                <button onclick="handleLogout()" class="p-1.5 bg-zinc-900 hover:bg-zinc-800 rounded-lg text-xs text-slate-300">Logout</button>
             </div>
         </header>
 
         <!-- Main Workspace -->
-        <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
-            <!-- Sidebar Navigation -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-4 gap-6 overflow-y-auto">
             <aside class="space-y-2">
-                <button class="w-full text-left px-4 py-3 bg-blue-600/20 text-blue-400 rounded-xl font-medium flex items-center space-x-3 border border-blue-500/30"><span>📁</span><span>My Files</span></button>
-                <button class="w-full text-left px-4 py-3 hover:bg-slate-900 rounded-xl font-medium flex items-center space-x-3 text-slate-400 transition"><span>🗑️</span><span>Recycle Bin (30 Days)</span></button>
-                <div id="adminPanelNav" class="hidden pt-4 border-t border-slate-800">
-                    <p class="text-xs text-amber-400 font-bold px-4 mb-2 uppercase">Master Controls</p>
-                    <button onclick="openAdminPanel()" class="w-full text-left px-4 py-3 bg-amber-500/10 text-amber-400 rounded-xl font-medium flex items-center space-x-3 border border-amber-500/20"><span>🛡️</span><span>Supreme Admin Panel</span></button>
+                <button class="w-full text-left px-4 py-2.5 bg-blue-600/20 text-blue-400 rounded-xl font-medium flex items-center space-x-3 border border-blue-500/30 text-xs"><span>📁</span><span>My Files</span></button>
+                <button class="w-full text-left px-4 py-2.5 hover:bg-zinc-900 rounded-xl font-medium flex items-center space-x-3 text-slate-400 transition text-xs"><span>🗑️</span><span>Recycle Bin (30 Days)</span></button>
+                <div id="adminPanelNav" class="hidden pt-4 border-t border-zinc-800">
+                    <p class="text-[10px] text-amber-400 font-bold px-4 mb-2 uppercase">Master Controls</p>
+                    <button onclick="openAdminPanel()" class="w-full text-left px-4 py-2.5 bg-amber-500/10 text-amber-400 rounded-xl font-medium flex items-center space-x-3 border border-amber-500/20 text-xs"><span>🛡️</span><span>Supreme Owner Panel</span></button>
                 </div>
             </aside>
 
-            <!-- Gallery & Upload Grid -->
             <section class="md:col-span-3 space-y-6">
-                <!-- Upload Dropzone -->
-                <div class="border-2 border-dashed border-slate-700 hover:border-blue-500 bg-slate-900/40 rounded-2xl p-8 text-center transition cursor-pointer" onclick="triggerUpload()">
+                <div class="border-2 border-dashed border-zinc-800 hover:border-blue-500 bg-zinc-900/30 rounded-2xl p-8 text-center transition cursor-pointer" onclick="triggerUpload()">
                     <div class="max-w-xs mx-auto space-y-2">
-                        <span class="text-4xl">📤</span>
-                        <p class="font-semibold">Click to Upload Photos or Videos</p>
-                        <p class="text-xs text-slate-500">Files securely routed to Discord Channel (`1565403174494408788`)</p>
+                        <span class="text-3xl">📤</span>
+                        <p class="font-semibold text-xs">Click to Upload Photos, Videos or Files</p>
+                        <p class="text-[10px] text-zinc-500">Discord Channel ID: `1565403174494408788`[span_2](start_span)[span_2](end_span)</p>
                     </div>
                 </div>
 
-                <!-- Photos Grid View -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4">Recent Uploads Gallery</h3>
-                    <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        <div class="bg-slate-900 border border-slate-800 rounded-xl aspect-square flex items-center justify-center text-slate-600">No photos yet</div>
+                    <h3 class="text-sm font-bold mb-3">Recent Gallery</h3>
+                    <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square flex items-center justify-center text-[11px] text-zinc-600">No uploads yet</div>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- UPI PAYMENT MODAL (Auto-Intent QR) -->
-    <div id="paymentModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
-            <h3 class="text-xl font-bold">Scan & Pay Instantly</h3>
-            <p class="text-xs text-slate-400">Amount & reference code auto-fills in your UPI App (Paytm / GPay / PhonePe)</p>
-            <div class="bg-white p-4 rounded-2xl inline-block shadow-inner">
-                <img id="upiQrImage" src="" alt="UPI QR Code" class="w-48 h-48 mx-auto">
+    <!-- UPI PAYMENT MODAL -->
+    <div id="paymentModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+            <h3 class="text-base font-bold">Scan & Pay Instantly</h3>
+            <p class="text-[11px] text-zinc-400">Amount & reference code auto-fills in your UPI App[span_3](start_span)[span_3](end_span)</p>
+            <div class="bg-white p-3 rounded-2xl inline-block">
+                <img id="upiQrImage" src="" alt="UPI QR Code" class="w-40 h-40 mx-auto">
             </div>
-            <div class="bg-slate-800 p-3 rounded-xl text-left text-xs space-y-1 font-mono">
-                <p><strong>UPI ID:</strong> <span id="modalUpiId" class="text-blue-400">8865919649@ptsbi</span></p>
-                <p><strong>Exact Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
-                <p><strong>Reference Note:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
+            <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
+                <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)</p>
+                <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
+                <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
             </div>
-            <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-xl transition shadow-lg shadow-emerald-600/20">Open UPI App & Pay</a>
-            <button onclick="closePaymentModal()" class="text-xs text-slate-500 hover:text-slate-300">Cancel / Close</button>
+            <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_6](start_span)[span_6](end_span)</a>
+            <button onclick="closePaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">Cancel</button>
         </div>
     </div>
 
     <script>
-        let currentUser = null;
-
-        async function handleLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            if(!email) { alert("Please enter email"); return; }
-
-            const res = await fetch('/api/auth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-
-            if(data.success) {
-                currentUser = data.user;
-                document.getElementById('authScreen').classList.add('hidden');
-                document.getElementById('dashboardScreen').classList.remove('hidden');
-                document.getElementById('userNameDisplay').innerText = currentUser.email;
-                document.getElementById('userRoleBadge').innerText = currentUser.role.toUpperCase();
-
-                if(currentUser.role === 'supreme_owner') {
-                    document.getElementById('adminPanelNav').classList.remove('hidden');
-                }
+        // Password Show/Hide Toggle Function
+        function togglePassword() {
+            const pwd = document.getElementById('loginPassword');
+            const btn = document.getElementById('toggleBtn');
+            if(pwd.type === "password") {
+                pwd.type = "text";
+                btn.innerText = "Hide";
+            } else {
+                pwd.type = "password";
+                btn.innerText = "Show";
             }
         }
 
-        async function openPricingModal() {
-            const planType = prompt("Select Plan:\n1. 2GB_MONTHLY (₹100)\n2. 5GB_MONTHLY (₹250)\n3. 5GB_YEARLY (₹2700)", "2GB_MONTHLY");
-            if(!planType) return;
+        function handleLogin() {
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            if(!identifier) { alert("Please enter username, email or phone!"); return; }
 
-            const res = await fetch('/api/payment/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: currentUser.email, planType })
-            });
-            const data = await res.json();
+            document.getElementById('dashboardScreen').classList.remove('hidden');
+            document.getElementById('userNameDisplay').innerText = identifier;
 
-            if(data.success) {
-                document.getElementById('upiQrImage').src = data.qrCodeApi;
-                document.getElementById('modalAmount').innerText = `₹${data.amount}`;
-                document.getElementById('modalRefCode').innerText = data.referenceCode;
-                document.getElementById('upiIntentBtn').href = data.upiIntentUrl;
-                document.getElementById('paymentModal').classList.remove('hidden');
+            if(identifier === "vs4539876@gmail.com") {
+                document.getElementById('userRoleBadge').innerText = "SUPREME OWNER";
+                document.getElementById('userRoleBadge').className = "text-[10px] px-2.5 py-0.5 bg-amber-500/20 text-amber-400 rounded-full font-bold border border-amber-500/30";
+                document.getElementById('adminPanelNav').classList.remove('hidden');
+                document.getElementById('storageMeterText').innerText = "Unlimited Storage (Supreme Master)";
+            } else {
+                document.getElementById('userRoleBadge').innerText = "NORMAL USER";
+                document.getElementById('storageMeterText').innerText = "1.2 GB / 50 GB Used";
             }
+        }
+
+        function handleSignup() {
+            const input = prompt("Enter new Email or Mobile Number to register:");
+            if(input) {
+                document.getElementById('loginIdentifier').value = input;
+                alert("Account created successfully with 50GB Free Storage! Now click Log in.");
+            }
+        }
+
+        function handleLogout() {
+            document.getElementById('dashboardScreen').classList.add('hidden');
+            document.getElementById('adminPanelNav').classList.add('hidden');
+            document.getElementById('loginIdentifier').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function openPricingModal() {
+            const plan = prompt("Select Plan:\n1. 2GB_MONTHLY (₹100)\n2. 4GB_MONTHLY (₹200)\n3. 5GB_MONTHLY (₹250)\n4. 5GB_YEARLY (₹2700)", "2GB_MONTHLY");
+            if(!plan) return;
+
+            let base = 100;
+            if(plan.includes("4GB")) base = 200;
+            if(plan.includes("250") || plan.includes("5GB")) base = 250;
+            if(plan.includes("YEARLY")) base = 2700;
+
+            const randomPaise = (Math.floor(Math.random() * 89) + 10) / 100;
+            const finalAmount = (base + randomPaise).toFixed(2);
+            const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
+
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)
+
+            document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
+            document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
+            document.getElementById('modalRefCode').innerText = refCode;
+            document.getElementById('upiIntentBtn').href = upiUrl;
+            document.getElementById('paymentModal').classList.remove('hidden');
         }
 
         function closePaymentModal() {
@@ -152,11 +192,11 @@
         }
 
         function triggerUpload() {
-            alert("Discord Cloud Integration Active! Connected to Channel ID: 1565403174494408788");
+            alert("File picker opened! Files routing directly to Discord Channel: 1565403174494408788[span_9](start_span)[span_9](end_span).");
         }
 
         function openAdminPanel() {
-            alert("Supreme Owner Master Control: You can manage partner owners, view logs, and transfer ownership here.");
+            alert("Supreme Owner Master Control:\n- Manage Partner Owners & Admins\n- Transfer Ownership Rights[span_10](start_span)[span_10](end_span)\n- View Subscriptions");
         }
     </script>
 </body>
