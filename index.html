@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCloud - Secure Private Cloud Storage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+
+    <!-- LOGIN / AUTH SCREEN -->
+    <div id="authScreen" class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-md shadow-2xl">
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">MyCloud Platform</h1>
+                <p class="text-slate-400 text-sm mt-1">Zero-Knowledge Encrypted Private Cloud</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs text-slate-400 uppercase font-semibold">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="e.g., vs4539876@gmail.com" class="w-full mt-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 uppercase font-semibold">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" class="w-full mt-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500">
+                </div>
+                <button onclick="handleLogin()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold transition shadow-lg shadow-blue-600/30">Login / Register Securely</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD (Google Photos Style) -->
+    <div id="dashboardScreen" class="hidden min-h-screen flex flex-col">
+        <!-- Top Header -->
+        <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-xl font-black bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">☁️ MyCloud</span>
+                <span id="userRoleBadge" class="text-xs px-2.5 py-1 bg-blue-500/20 text-blue-400 rounded-full font-medium border border-blue-500/30">Normal User</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-right hidden sm:block">
+                    <p id="userNameDisplay" class="text-sm font-semibold">Vipin Singh</p>
+                    <p id="storageMeterText" class="text-xs text-slate-400">1.2 GB / 5 GB Used</p>
+                </div>
+                <button onclick="openPricingModal()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-sm rounded-xl shadow-lg hover:opacity-90 transition">⚡ Upgrade Plan</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Sidebar Navigation -->
+            <aside class="space-y-2">
+                <button class="w-full text-left px-4 py-3 bg-blue-600/20 text-blue-400 rounded-xl font-medium flex items-center space-x-3 border border-blue-500/30"><span>📁</span><span>My Files</span></button>
+                <button class="w-full text-left px-4 py-3 hover:bg-slate-900 rounded-xl font-medium flex items-center space-x-3 text-slate-400 transition"><span>🗑️</span><span>Recycle Bin (30 Days)</span></button>
+                <div id="adminPanelNav" class="hidden pt-4 border-t border-slate-800">
+                    <p class="text-xs text-amber-400 font-bold px-4 mb-2 uppercase">Master Controls</p>
+                    <button onclick="openAdminPanel()" class="w-full text-left px-4 py-3 bg-amber-500/10 text-amber-400 rounded-xl font-medium flex items-center space-x-3 border border-amber-500/20"><span>🛡️</span><span>Supreme Admin Panel</span></button>
+                </div>
+            </aside>
+
+            <!-- Gallery & Upload Grid -->
+            <section class="md:col-span-3 space-y-6">
+                <!-- Upload Dropzone -->
+                <div class="border-2 border-dashed border-slate-700 hover:border-blue-500 bg-slate-900/40 rounded-2xl p-8 text-center transition cursor-pointer" onclick="triggerUpload()">
+                    <div class="max-w-xs mx-auto space-y-2">
+                        <span class="text-4xl">📤</span>
+                        <p class="font-semibold">Click to Upload Photos or Videos</p>
+                        <p class="text-xs text-slate-500">Files securely routed to Discord Channel (`1565403174494408788`)</p>
+                    </div>
+                </div>
+
+                <!-- Photos Grid View -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Recent Uploads Gallery</h3>
+                    <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div class="bg-slate-900 border border-slate-800 rounded-xl aspect-square flex items-center justify-center text-slate-600">No photos yet</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- UPI PAYMENT MODAL (Auto-Intent QR) -->
+    <div id="paymentModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+            <h3 class="text-xl font-bold">Scan & Pay Instantly</h3>
+            <p class="text-xs text-slate-400">Amount & reference code auto-fills in your UPI App (Paytm / GPay / PhonePe)</p>
+            <div class="bg-white p-4 rounded-2xl inline-block shadow-inner">
+                <img id="upiQrImage" src="" alt="UPI QR Code" class="w-48 h-48 mx-auto">
+            </div>
+            <div class="bg-slate-800 p-3 rounded-xl text-left text-xs space-y-1 font-mono">
+                <p><strong>UPI ID:</strong> <span id="modalUpiId" class="text-blue-400">8865919649@ptsbi</span></p>
+                <p><strong>Exact Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
+                <p><strong>Reference Note:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
+            </div>
+            <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-xl transition shadow-lg shadow-emerald-600/20">Open UPI App & Pay</a>
+            <button onclick="closePaymentModal()" class="text-xs text-slate-500 hover:text-slate-300">Cancel / Close</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if(!email) { alert("Please enter email"); return; }
+
+            const res = await fetch('/api/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if(data.success) {
+                currentUser = data.user;
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('dashboardScreen').classList.remove('hidden');
+                document.getElementById('userNameDisplay').innerText = currentUser.email;
+                document.getElementById('userRoleBadge').innerText = currentUser.role.toUpperCase();
+
+                if(currentUser.role === 'supreme_owner') {
+                    document.getElementById('adminPanelNav').classList.remove('hidden');
+                }
+            }
+        }
+
+        async function openPricingModal() {
+            const planType = prompt("Select Plan:\n1. 2GB_MONTHLY (₹100)\n2. 5GB_MONTHLY (₹250)\n3. 5GB_YEARLY (₹2700)", "2GB_MONTHLY");
+            if(!planType) return;
+
+            const res = await fetch('/api/payment/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: currentUser.email, planType })
+            });
+            const data = await res.json();
+
+            if(data.success) {
+                document.getElementById('upiQrImage').src = data.qrCodeApi;
+                document.getElementById('modalAmount').innerText = `₹${data.amount}`;
+                document.getElementById('modalRefCode').innerText = data.referenceCode;
+                document.getElementById('upiIntentBtn').href = data.upiIntentUrl;
+                document.getElementById('paymentModal').classList.remove('hidden');
+            }
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function triggerUpload() {
+            alert("Discord Cloud Integration Active! Connected to Channel ID: 1565403174494408788");
+        }
+
+        function openAdminPanel() {
+            alert("Supreme Owner Master Control: You can manage partner owners, view logs, and transfer ownership here.");
+        }
+    </script>
+</body>
+</html>
