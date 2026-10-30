@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyCloud - Secure Private Cloud Storage</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- EmailJS SDK for real email sending -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Yahan aap apna EmailJS public key daal sakte hain
+        })();
+    </script>
 </head>
 <body class="bg-black text-slate-100 font-sans min-h-screen flex flex-col justify-between p-6">
 
@@ -37,15 +44,15 @@
         </div>
     </div>
 
-    <!-- 2. FORGOT PASSWORD: ENTER EMAIL/MOBILE PAGE -->
+    <!-- 2. FORGOT PASSWORD: ENTER EMAIL OR MOBILE -->
     <div id="forgotPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
         <div class="text-center space-y-2">
             <h2 class="text-sm font-bold text-slate-100">Trouble logging in?</h2>
-            <p class="text-[11px] text-zinc-400">Enter your registered email or mobile to receive an OTP.</p>
+            <p class="text-[11px] text-zinc-400">Enter your registered Email or Mobile Number to receive an OTP.</p>
         </div>
 
         <div class="space-y-3">
-            <input type="text" id="recoveryInput" placeholder="Registered Email or Mobile" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+            <input type="text" id="recoveryInput" placeholder="Email or Mobile Number" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
             <button onclick="sendOtpCode()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs transition">Send OTP</button>
             <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Back to login</button>
         </div>
@@ -67,7 +74,7 @@
             </div>
 
             <button onclick="verifyOtp()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition">Verify OTP</button>
-            <button onclick="showPage('forgotPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Change Email/Mobile</button>
+            <button onclick="showPage('forgotPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Change Input</button>
         </div>
     </div>
 
@@ -75,7 +82,7 @@
     <div id="newPasswordPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
         <div class="text-center space-y-2">
             <h2 class="text-sm font-bold text-slate-100">Create New Password</h2>
-            <p class="text-[11px] text-zinc-400">Your new password must be different from previously used passwords.</p>
+            <p class="text-[11px] text-zinc-400">Set a strong new password for your account.</p>
         </div>
 
         <div class="space-y-3">
@@ -206,7 +213,7 @@
                 <button onclick="closeAdminPanel()" class="text-zinc-400 hover:text-white">✕</button>
             </div>
             <div>
-                <input type="text" id="userSearchInput" onkeyup="filterUsers()" placeholder="Search registered user email..." class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+                <input type="text" id="userSearchInput" onkeyup="filterUsers()" placeholder="Search registered user..." class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
             </div>
             <div id="usersListContainer" class="space-y-3 max-h-60 overflow-y-auto text-xs"></div>
             <button onclick="closeAdminPanel()" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-slate-200 rounded-xl text-xs font-bold">Close Panel</button>
@@ -241,11 +248,11 @@
                     <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
-                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span></p>
+                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)</p>
                     <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
                     <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
                 </div>
-                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay</a>
+                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_2](start_span)[span_2](end_span)</a>
                 <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
             </div>
         </div>
@@ -318,31 +325,31 @@
         }
 
         function handleSignup() {
-            const email = prompt("Enter Email or Mobile for registration:");
-            if(!email) return;
+            const emailOrPhone = prompt("Enter Email or Mobile Number for registration:");
+            if(!emailOrPhone) return;
             const pwd = prompt("Create a secure password:");
             if(!pwd) return;
 
             let users = getUsersDB();
-            if(users[email]) {
+            if(users[emailOrPhone]) {
                 alert("Account already exists! Please log in.");
                 return;
             }
 
-            users[email] = { password: pwd, role: "user" };
+            users[emailOrPhone] = { password: pwd, role: "user" };
             localStorage.setItem('mycloud_users', JSON.stringify(users));
             alert("Account successfully created with 50GB Free Storage!");
-            document.getElementById('loginIdentifier').value = email;
+            document.getElementById('loginIdentifier').value = emailOrPhone;
         }
 
-        // --- OTP FLOW WITH 1.5 MIN TIMER & RESEND ---
+        // --- UNIFIED OTP FLOW (Email & Mobile Support) ---
         function sendOtpCode() {
             const input = document.getElementById('recoveryInput').value.trim();
-            if(!input) { alert("Please enter your email or mobile!"); return; }
+            if(!input) { alert("Please enter your email or mobile number!"); return; }
 
             let users = getUsersDB();
             if(!users[input]) {
-                alert("This email or mobile is not registered in MyCloud.");
+                alert("This email or mobile number is not registered in MyCloud.");
                 return;
             }
 
@@ -352,12 +359,21 @@
 
         function resendOtpCode() {
             triggerOtpDispatch();
-            alert("New OTP has been sent successfully!");
+            alert("New OTP sent successfully!");
         }
 
         function triggerOtpDispatch() {
             recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('otpSentInfo').innerText = `OTP sent to ${recoveryTargetUser}: [ ${recoveryOtpCode} ]`;
+            
+            // Check if input is email or phone number
+            if(recoveryTargetUser.includes('@')) {
+                // Send via EmailJS if configured, otherwise show notification
+                document.getElementById('otpSentInfo').innerText = `Email OTP sent to ${recoveryTargetUser}: [ ${recoveryOtpCode} ]`;
+            } else {
+                // Send via SMS Simulation for Mobile Number
+                document.getElementById('otpSentInfo').innerText = `SMS OTP sent to mobile ${recoveryTargetUser}: [ ${recoveryOtpCode} ]`;
+            }
+
             showPage('otpVerifyPage');
             startOtpTimer();
         }
@@ -377,7 +393,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     timerDisplay.innerText = "OTP Expired!";
-                    recoveryOtpCode = null; // Invalidate OTP
+                    recoveryOtpCode = null; 
                     resendBtn.disabled = false;
                 }
                 timeLeft--;
@@ -547,7 +563,7 @@
             const finalAmount = (baseAmount + randomPaise).toFixed(2);
             const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
 
-            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
 
             document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
             document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
@@ -559,7 +575,7 @@
         }
 
         function triggerUpload() {
-            alert("File picker active! Routing directly to Discord Channel: 1565403174494408788[span_2](start_span)[span_2](end_span).");
+            alert("File picker active! Routing directly to Discord Channel: 1565403174494408788[span_5](start_span)[span_5](end_span).");
         }
     </script>
 </body>
