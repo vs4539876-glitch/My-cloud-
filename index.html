@@ -12,8 +12,8 @@
         <span class="text-xs text-slate-400 cursor-pointer hover:text-slate-200">English (UK) ▾</span>
     </div>
 
-    <!-- INSTAGRAM STYLE LOGIN BOX -->
-    <div class="max-w-xs w-full mx-auto space-y-6 my-auto">
+    <!-- 1. INSTAGRAM STYLE LOGIN PAGE -->
+    <div id="loginPage" class="max-w-xs w-full mx-auto space-y-6 my-auto">
         <div class="text-center space-y-3">
             <div class="w-20 h-20 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 rounded-3xl mx-auto flex items-center justify-center shadow-2xl shadow-pink-500/20">
                 <span class="text-3xl">☁️</span>
@@ -26,18 +26,48 @@
             
             <div class="relative">
                 <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500 pr-12">
-                <button type="button" onclick="togglePassword()" id="toggleBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
+                <button type="button" onclick="togglePassword('loginPassword', 'toggleBtn')" id="toggleBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
             </div>
 
             <button onclick="handleLogin()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-xl transition text-sm shadow-lg shadow-blue-600/20">Log in</button>
         </div>
 
         <div class="text-center">
-            <a href="#" onclick="alert('Password reset link sent.')" class="text-xs text-blue-400 hover:underline">Forgotten password?</a>
+            <a href="#" onclick="showPage('forgotPage')" class="text-xs text-blue-400 hover:underline">Forgotten password?</a>
         </div>
     </div>
 
-    <div class="max-w-xs w-full mx-auto space-y-4 text-center">
+    <!-- 2. FORGOT PASSWORD / OTP RECOVERY PAGE -->
+    <div id="forgotPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Trouble logging in?</h2>
+            <p class="text-[11px] text-zinc-400">Enter your registered email or mobile to receive an OTP.</p>
+        </div>
+
+        <!-- Step A: Send OTP -->
+        <div id="otpSendSection" class="space-y-3">
+            <input type="text" id="recoveryInput" placeholder="Email or Mobile" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+            <button onclick="sendOtpCode()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs transition">Send OTP</button>
+            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Back to login</button>
+        </div>
+
+        <!-- Step B: Enter OTP & New Password -->
+        <div id="otpVerifySection" class="hidden space-y-3">
+            <p id="otpInfoText" class="text-[10px] text-emerald-400 text-center font-mono"></p>
+            <input type="text" id="enteredOtp" placeholder="Enter 4-digit OTP" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none text-center font-bold tracking-widest">
+            
+            <div class="relative">
+                <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none pr-12">
+                <button type="button" onclick="togglePassword('newPassword', 'toggleNewBtn')" id="toggleNewBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
+            </div>
+
+            <button onclick="verifyAndResetPassword()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs transition">Verify & Reset Password</button>
+            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">Cancel</button>
+        </div>
+    </div>
+
+    <!-- SIGNUP BUTTON FOOTER -->
+    <div id="signupFooter" class="max-w-xs w-full mx-auto space-y-4 text-center">
         <button onclick="handleSignup()" class="w-full py-3 bg-transparent hover:bg-zinc-900 border border-zinc-800 text-blue-400 font-semibold rounded-xl transition text-xs">Create new account</button>
         <div class="flex items-center justify-center space-x-1 text-xs text-zinc-500">
             <span>∞</span>
@@ -45,9 +75,8 @@
         </div>
     </div>
 
-    <!-- MAIN GOOGLE PHOTOS STYLE DASHBOARD -->
-    <div id="dashboardScreen" class="hidden fixed inset-0 bg-black z-50 flex flex-col justify-between">
-        
+    <!-- 3. GOOGLE PHOTOS STYLE MAIN DASHBOARD -->
+    <div id="dashboardPage" class="hidden fixed inset-0 bg-black z-50 flex flex-col justify-between">
         <header class="bg-zinc-950 px-4 py-3 flex items-center justify-between border-b border-zinc-900">
             <div class="flex items-center space-x-3 w-full">
                 <button onclick="toggleSidebar(true)" class="p-2 text-slate-300 hover:text-white">
@@ -60,40 +89,44 @@
             </div>
         </header>
 
-        <main id="mainContentArea" class="flex-1 overflow-y-auto p-4 space-y-4">
-            <div id="photosView" class="space-y-4">
+        <!-- Dynamic Tabs Content -->
+        <main class="flex-1 overflow-y-auto p-4 space-y-4">
+            <!-- Photos Tab -->
+            <div id="tabPhotos" class="space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Today</h3>
                     <button onclick="triggerUpload()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold shadow">＋ Upload</button>
                 </div>
-                <div id="galleryGrid" class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-3 gap-2">
                     <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square flex items-center justify-center text-[10px] text-zinc-600">No photos</div>
                 </div>
             </div>
 
-            <div id="recycleBinView" class="hidden space-y-4">
+            <!-- Recycle Bin Tab -->
+            <div id="tabRecycle" class="hidden space-y-4">
                 <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
                     <div>
                         <h3 class="text-sm font-bold text-slate-100">Recently deleted</h3>
-                        <p class="text-[10px] text-zinc-400">Items are permanently deleted after 30 days</p>
+                        <p class="text-[10px] text-zinc-400">Items permanently deleted after 30 days</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-2">
                     <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square relative flex items-center justify-center text-[10px] text-zinc-600">
-                        <span>Deleted Photo</span>
+                        <span>Photo</span>
                         <span class="absolute bottom-1.5 left-1.5 bg-black/70 text-[9px] text-zinc-300 px-1.5 py-0.5 rounded">30 days</span>
                     </div>
                     <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square relative flex items-center justify-center text-[10px] text-zinc-600">
-                        <span>Deleted Video</span>
+                        <span>Video</span>
                         <span class="absolute bottom-1.5 left-1.5 bg-black/70 text-[9px] text-zinc-300 px-1.5 py-0.5 rounded">30 days</span>
                     </div>
                 </div>
                 <div class="pt-6 text-center">
-                    <button onclick="alert('All items permanently deleted!')" class="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-red-400 rounded-full text-xs font-semibold shadow">Delete all</button>
+                    <button onclick="alert('Recycle bin emptied!')" class="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-red-400 rounded-full text-xs font-semibold shadow">Delete all</button>
                 </div>
             </div>
         </main>
 
+        <!-- Bottom Google Photos Navigation -->
         <nav class="bg-zinc-950 border-t border-zinc-900 py-2 px-6 flex justify-around items-center">
             <button onclick="switchTab('photos')" class="flex flex-col items-center text-blue-400 space-y-1">
                 <span class="text-lg">🖼️</span>
@@ -116,7 +149,7 @@
             <div class="space-y-6">
                 <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
                     <div>
-                        <p id="drawerEmail" class="text-xs font-bold text-slate-200">User</p>
+                        <p id="drawerEmail" class="text-xs font-bold text-slate-200 flex items-center space-x-1"><span>User</span></p>
                         <p id="drawerRole" class="text-[10px] text-blue-400 font-semibold mt-0.5">NORMAL USER</p>
                     </div>
                     <button onclick="toggleSidebar(false)" class="text-zinc-400 hover:text-white text-lg">✕</button>
@@ -124,15 +157,11 @@
 
                 <div class="bg-zinc-900 border border-zinc-800 p-3.5 rounded-2xl space-y-2">
                     <div class="flex justify-between text-[11px] font-semibold text-zinc-300">
-                        <span>Storage Used (50GB Free)</span>
+                        <span>Storage (50GB Free)</span>
                         <span id="storageText">1.2 GB of 50 GB</span>
                     </div>
                     <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
                         <div id="storageBar" class="bg-blue-500 h-full w-[5%]"></div>
-                    </div>
-                    <div class="flex space-x-2 pt-1">
-                        <button onclick="openPricingModal()" class="flex-1 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-xl text-[10px] font-bold">Get storage</button>
-                        <button onclick="alert('Clean up space option')" class="flex-1 py-1.5 bg-zinc-800 text-zinc-300 rounded-xl text-[10px] font-bold">Clean up</button>
                     </div>
                 </div>
 
@@ -151,30 +180,29 @@
         <div class="flex-1 bg-black/60 backdrop-blur-sm" onclick="toggleSidebar(false)"></div>
     </div>
 
-    <!-- SUPREME OWNER ROLE MANAGER MODAL -->
-    <div id="adminModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <!-- 4. ADVANCED SUPREME OWNER PANEL (Search & Switch Roles) -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 text-left space-y-4 shadow-2xl">
-            <h3 class="text-sm font-bold text-amber-400 uppercase">Supreme Owner Master Controls</h3>
-            <p class="text-[11px] text-zinc-400">Toggle switches to assign Partner Owner or Simple Admin roles instantly:</p>
-            
-            <div class="space-y-3 max-h-60 overflow-y-auto text-xs">
-                <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
-                    <div>
-                        <p class="font-bold text-slate-200">friend1@gmail.com</p>
-                        <p class="text-[10px] text-zinc-500">Simple Admin (Unlimited Storage)</p>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" onchange="toggleUserRole(this, 'friend1@gmail.com', 'Admin')" class="sr-only peer">
-                        <div class="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
-                    </label>
-                </div>
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-bold text-amber-400 flex items-center space-x-2"><span>👑 Supreme Owner Master Panel</span></h3>
+                <button onclick="closeAdminPanel()" class="text-zinc-400 hover:text-white">✕</button>
+            </div>
+
+            <!-- Search User Bar -->
+            <div>
+                <input type="text" id="userSearchInput" onkeyup="filterUsers()" placeholder="Search registered user email..." class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+            </div>
+
+            <!-- Users List with Role Switches -->
+            <div id="usersListContainer" class="space-y-3 max-h-60 overflow-y-auto text-xs">
+                <!-- Dynamically populated users -->
             </div>
 
             <button onclick="closeAdminPanel()" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-slate-200 rounded-xl text-xs font-bold">Close Panel</button>
         </div>
     </div>
 
-    <!-- CLEAN UPGRADE PLANS MODAL -->
+    <!-- 5. PRICING / UPI PAYMENT MODAL -->
     <div id="paymentModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
             <div id="planSelectionView" class="space-y-4">
@@ -183,10 +211,6 @@
                     <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
                         <div><p class="font-bold text-blue-400">2GB Monthly</p><p class="text-[10px] text-zinc-400">₹100 / month</p></div>
                         <button onclick="selectPlanAndPay('2GB_MONTHLY', 100)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
-                    </div>
-                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
-                        <div><p class="font-bold text-blue-400">4GB Monthly</p><p class="text-[10px] text-zinc-400">₹200 / month</p></div>
-                        <button onclick="selectPlanAndPay('4GB_MONTHLY', 200)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                     <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
                         <div><p class="font-bold text-blue-400">5GB Monthly</p><p class="text-[10px] text-zinc-400">₹250 / month</p></div>
@@ -206,66 +230,79 @@
                     <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
-                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span></p>
+                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)</p>
                     <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
                     <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
                 </div>
-                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay</a>
+                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_2](start_span)[span_2](end_span)</a>
                 <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Database simulation using browser localStorage
+        // Database simulation via LocalStorage with Default Supreme Owner
         function getUsersDB() {
             let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
-            // Default Supreme Owner preset
-            users["vs4539876@gmail.com"] = "admin123"; 
+            if(!users["vs4539876@gmail.com"]) {
+                users["vs4539876@gmail.com"] = { password: "admin123", role: "supreme_owner" };
+            }
             return users;
         }
 
-        function togglePassword() {
-            const pwd = document.getElementById('loginPassword');
-            const btn = document.getElementById('toggleBtn');
+        let recoveryOtpCode = null;
+        let recoveryTargetUser = null;
+
+        function showPage(pageId) {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('forgotPage').classList.add('hidden');
+            document.getElementById('signupFooter').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+
+            if(pageId === 'loginPage') {
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('signupFooter').classList.remove('hidden');
+            } else if(pageId === 'forgotPage') {
+                document.getElementById('forgotPage').classList.remove('hidden');
+                document.getElementById('otpSendSection').classList.remove('hidden');
+                document.getElementById('otpVerifySection').classList.add('hidden');
+            } else if(pageId === 'dashboardPage') {
+                document.getElementById('dashboardPage').classList.remove('hidden');
+            }
+        }
+
+        function togglePassword(fieldId, btnId) {
+            const pwd = document.getElementById(fieldId);
+            const btn = document.getElementById(btnId);
             if(pwd.type === "password") { pwd.type = "text"; btn.innerText = "Hide"; }
             else { pwd.type = "password"; btn.innerText = "Show"; }
         }
 
+        // STRICT LOGIN CHECK
         function handleLogin() {
             const identifier = document.getElementById('loginIdentifier').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
 
-            if(!identifier || !password) { 
-                alert("Please enter both username/email and password!"); 
-                return; 
+            if(!identifier || !password) {
+                alert("Please fill in both fields!");
+                return;
             }
 
             let users = getUsersDB();
 
-            // Check if user exists and password matches
             if(users[identifier]) {
-                if(users[identifier] === password) {
-                    // Successful login
-                    document.getElementById('dashboardScreen').classList.remove('hidden');
-                    document.getElementById('drawerEmail').innerText = identifier;
+                // Check exact password
+                const userObj = typeof users[identifier] === 'object' ? users[identifier] : { password: users[identifier], role: identifier === "vs4539876@gmail.com" ? "supreme_owner" : "user" };
 
-                    if(identifier === "vs4539876@gmail.com") {
-                        document.getElementById('drawerRole').innerText = "SUPREME OWNER (Master Rights)";
-                        document.getElementById('drawerRole').className = "text-[10px] text-amber-400 font-bold mt-0.5";
-                        document.getElementById('adminMenuOption').classList.remove('hidden');
-                        document.getElementById('storageText').innerText = "Unlimited (Master)";
-                        document.getElementById('storageBar').style.width = "100%";
-                    } else {
-                        document.getElementById('drawerRole').innerText = "NORMAL USER (50GB Free)";
-                        document.getElementById('storageText').innerText = "1.2 GB of 50 GB";
-                        document.getElementById('storageBar').style.width = "5%";
-                    }
+                if(userObj.password === password) {
+                    // Success Login
+                    showPage('dashboardPage');
+                    setupDashboard(identifier, userObj.role);
                 } else {
-                    alert("Incorrect Password! Please enter the correct password.");
+                    alert("Incorrect Password! Please check your password.");
                 }
             } else {
-                alert("Account not found! Please click 'Create new account' below to sign up first.");
+                alert("Account not found! Please create a new account.");
             }
         }
 
@@ -281,15 +318,77 @@
                 return;
             }
 
-            users[email] = pwd;
+            users[email] = { password: pwd, role: "user" };
             localStorage.setItem('mycloud_users', JSON.stringify(users));
-            alert("Account created successfully with 50GB free storage! Now you can log in with your password.");
+            alert("Account successfully created with 50GB Free Storage!");
             document.getElementById('loginIdentifier').value = email;
         }
 
+        // INSTAGRAM STYLE OTP RECOVERY
+        function sendOtpCode() {
+            const input = document.getElementById('recoveryInput').value.trim();
+            if(!input) { alert("Please enter your email or mobile!"); return; }
+
+            let users = getUsersDB();
+            if(!users[input]) {
+                alert("This email or mobile is not registered in MyCloud.");
+                return;
+            }
+
+            recoveryTargetUser = input;
+            recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
+
+            document.getElementById('otpInfoText').innerText = `[OTP sent to ${input}: ${recoveryOtpCode}]`;
+            document.getElementById('otpSendSection').classList.add('hidden');
+            document.getElementById('otpVerifySection').classList.remove('hidden');
+        }
+
+        function verifyAndResetPassword() {
+            const userOtp = document.getElementById('enteredOtp').value.trim();
+            const newPwd = document.getElementById('newPassword').value.trim();
+
+            if(userOtp != recoveryOtpCode) {
+                alert("Incorrect OTP code!");
+                return;
+            }
+            if(!newPwd || newPwd.length < 4) {
+                alert("Password must be at least 4 characters.");
+                return;
+            }
+
+            let users = getUsersDB();
+            if(typeof users[recoveryTargetUser] === 'object') {
+                users[recoveryTargetUser].password = newPwd;
+            } else {
+                users[recoveryTargetUser] = { password: newPwd, role: "user" };
+            }
+            localStorage.setItem('mycloud_users', JSON.stringify(users));
+
+            alert("Password successfully reset! You can now log in.");
+            document.getElementById('loginIdentifier').value = recoveryTargetUser;
+            document.getElementById('loginPassword').value = '';
+            showPage('loginPage');
+        }
+
+        function setupDashboard(email, role) {
+            let roleText = "NORMAL USER";
+            if(email === "vs4539876@gmail.com" || role === "supreme_owner") {
+                document.getElementById('drawerEmail').innerHTML = `${email} <span class="text-amber-400 text-sm" title="Supreme Owner">👑</span>`;
+                document.getElementById('drawerRole').innerText = "SUPREME OWNER (Master Leader)";
+                document.getElementById('drawerRole').className = "text-[10px] text-amber-400 font-bold mt-0.5";
+                document.getElementById('adminMenuOption').classList.remove('hidden');
+                document.getElementById('storageText').innerText = "Unlimited (Master)";
+                document.getElementById('storageBar').style.width = "100%";
+            } else {
+                document.getElementById('drawerEmail').innerText = email;
+                document.getElementById('drawerRole').innerText = role.toUpperCase() + " (50GB Free)";
+                document.getElementById('storageText').innerText = "1.2 GB of 50 GB";
+                document.getElementById('storageBar').style.width = "5%";
+            }
+        }
+
         function handleLogout() {
-            document.getElementById('dashboardScreen').classList.add('hidden');
-            document.getElementById('sideDrawer').classList.add('hidden');
+            showPage('loginPage');
             document.getElementById('adminMenuOption').classList.add('hidden');
             document.getElementById('loginIdentifier').value = '';
             document.getElementById('loginPassword').value = '';
@@ -303,18 +402,20 @@
 
         function switchTab(tab) {
             if(tab === 'photos') {
-                document.getElementById('photosView').classList.remove('hidden');
-                document.getElementById('recycleBinView').classList.add('hidden');
+                document.getElementById('tabPhotos').classList.remove('hidden');
+                document.getElementById('tabRecycle').classList.add('hidden');
             } else if(tab === 'recycle') {
-                document.getElementById('photosView').classList.add('hidden');
-                document.getElementById('recycleBinView').classList.remove('hidden');
+                document.getElementById('tabPhotos').classList.add('hidden');
+                document.getElementById('tabRecycle').classList.remove('hidden');
             } else if(tab === 'albums') {
                 alert("Albums tab opened");
             }
             toggleSidebar(false);
         }
 
+        // SUPREME OWNER PANEL WITH SEARCH & ROLE SWITCHES
         function openAdminPanel() {
+            renderUsersAdminList();
             document.getElementById('adminModal').classList.remove('hidden');
             toggleSidebar(false);
         }
@@ -323,11 +424,57 @@
             document.getElementById('adminModal').classList.add('hidden');
         }
 
-        function toggleUserRole(checkbox, userEmail, roleName) {
-            if(checkbox.checked) {
-                alert(`${userEmail} successfully promoted to ${roleName}!`);
-            } else {
-                alert(`${roleName} role removed from ${userEmail}.`);
+        function renderUsersAdminList(filter = "") {
+            let users = getUsersDB();
+            let container = document.getElementById('usersListContainer');
+            container.innerHTML = "";
+
+            for(let email in users) {
+                if(filter && !email.toLowerCase().includes(filter.toLowerCase())) continue;
+                let data = typeof users[email] === 'object' ? users[email] : { role: "user" };
+                if(email === "vs4539876@gmail.com") continue; // Skip master supreme owner row
+
+                let isPartner = data.role === "partner_owner";
+                let isAdmin = data.role === "admin";
+                let isSupreme = data.role === "supreme_owner";
+
+                let html = `
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 space-y-2">
+                        <p class="font-bold text-slate-200">${email}</p>
+                        <div class="flex items-center justify-between text-[11px] pt-1 border-t border-zinc-900">
+                            <span class="text-zinc-400">Partner Owner</span>
+                            <input type="checkbox" ${isPartner ? 'checked' : ''} onchange="updateUserRole('${email}', 'partner_owner', this.checked)">
+                        </div>
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="text-zinc-400">Simple Admin</span>
+                            <input type="checkbox" ${isAdmin ? 'checked' : ''} onchange="updateUserRole('${email}', 'admin', this.checked)">
+                        </div>
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="text-amber-400 font-bold">Supreme Owner 👑</span>
+                            <input type="checkbox" ${isSupreme ? 'checked' : ''} onchange="updateUserRole('${email}', 'supreme_owner', this.checked)">
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            }
+        }
+
+        function filterUsers() {
+            let query = document.getElementById('userSearchInput').value;
+            renderUsersAdminList(query);
+        }
+
+        function updateUserRole(email, roleType, isChecked) {
+            let users = getUsersDB();
+            if(users[email]) {
+                if(typeof users[email] !== 'object') {
+                    users[email] = { password: users[email], role: isChecked ? roleType : 'user' };
+                } else {
+                    users[email].role = isChecked ? roleType : 'user';
+                }
+                localStorage.setItem('mycloud_users', JSON.stringify(users));
+                alert(`Role updated successfully for ${email}!`);
+                renderUsersAdminList();
             }
         }
 
@@ -351,7 +498,7 @@
             const finalAmount = (baseAmount + randomPaise).toFixed(2);
             const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
 
-            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
 
             document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
             document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
@@ -363,7 +510,7 @@
         }
 
         function triggerUpload() {
-            alert("File picker active! Routing directly to Discord Channel: 1565403174494408788.");
+            alert("File picker active! Routing directly to Discord Channel: 1565403174494408788[span_5](start_span)[span_5](end_span).");
         }
     </script>
 </body>
