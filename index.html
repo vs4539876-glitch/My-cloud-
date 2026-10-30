@@ -8,7 +8,6 @@
 </head>
 <body class="bg-black text-slate-100 font-sans min-h-screen flex flex-col justify-between p-6">
 
-    <!-- LANGUAGE SELECTOR -->
     <div class="text-center">
         <span class="text-xs text-slate-400 cursor-pointer hover:text-slate-200">English (UK) ▾</span>
     </div>
@@ -49,10 +48,8 @@
     <!-- MAIN GOOGLE PHOTOS STYLE DASHBOARD -->
     <div id="dashboardScreen" class="hidden fixed inset-0 bg-black z-50 flex flex-col justify-between">
         
-        <!-- Top Search Header -->
         <header class="bg-zinc-950 px-4 py-3 flex items-center justify-between border-b border-zinc-900">
             <div class="flex items-center space-x-3 w-full">
-                <!-- Hamburger Menu Button to open Side Drawer -->
                 <button onclick="toggleSidebar(true)" class="p-2 text-slate-300 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
@@ -63,25 +60,46 @@
             </div>
         </header>
 
-        <!-- Main Photo Stream Content Area -->
-        <main class="flex-1 overflow-y-auto p-4 space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Today</h3>
-                <button onclick="triggerUpload()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold shadow">＋ Upload</button>
+        <main id="mainContentArea" class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div id="photosView" class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Today</h3>
+                    <button onclick="triggerUpload()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold shadow">＋ Upload</button>
+                </div>
+                <div id="galleryGrid" class="grid grid-cols-3 gap-2">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square flex items-center justify-center text-[10px] text-zinc-600">No photos</div>
+                </div>
             </div>
-            
-            <div id="galleryGrid" class="grid grid-cols-3 gap-2">
-                <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square flex items-center justify-center text-[10px] text-zinc-600">No photos</div>
+
+            <div id="recycleBinView" class="hidden space-y-4">
+                <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-100">Recently deleted</h3>
+                        <p class="text-[10px] text-zinc-400">Items are permanently deleted after 30 days</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square relative flex items-center justify-center text-[10px] text-zinc-600">
+                        <span>Deleted Photo</span>
+                        <span class="absolute bottom-1.5 left-1.5 bg-black/70 text-[9px] text-zinc-300 px-1.5 py-0.5 rounded">30 days</span>
+                    </div>
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square relative flex items-center justify-center text-[10px] text-zinc-600">
+                        <span>Deleted Video</span>
+                        <span class="absolute bottom-1.5 left-1.5 bg-black/70 text-[9px] text-zinc-300 px-1.5 py-0.5 rounded">30 days</span>
+                    </div>
+                </div>
+                <div class="pt-6 text-center">
+                    <button onclick="alert('All items permanently deleted!')" class="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-red-400 rounded-full text-xs font-semibold shadow">Delete all</button>
+                </div>
             </div>
         </main>
 
-        <!-- Google Photos Style Bottom Navigation Bar -->
         <nav class="bg-zinc-950 border-t border-zinc-900 py-2 px-6 flex justify-around items-center">
-            <button class="flex flex-col items-center text-blue-400 space-y-1">
+            <button onclick="switchTab('photos')" class="flex flex-col items-center text-blue-400 space-y-1">
                 <span class="text-lg">🖼️</span>
                 <span class="text-[10px] font-medium">Photos</span>
             </button>
-            <button onclick="alert('Albums feature')" class="flex flex-col items-center text-zinc-500 hover:text-zinc-300 space-y-1">
+            <button onclick="switchTab('albums')" class="flex flex-col items-center text-zinc-500 hover:text-zinc-300 space-y-1">
                 <span class="text-lg">📁</span>
                 <span class="text-[10px] font-medium">Albums</span>
             </button>
@@ -92,27 +110,25 @@
         </nav>
     </div>
 
-    <!-- SIDE MENU DRAWER (Google Photos Style) -->
+    <!-- SIDE MENU DRAWER -->
     <div id="sideDrawer" class="hidden fixed inset-0 z-50 flex">
         <div class="bg-zinc-950 w-4/5 max-w-xs h-full border-r border-zinc-800 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
             <div class="space-y-6">
-                <!-- User Profile Header -->
                 <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
                     <div>
-                        <p id="drawerEmail" class="text-xs font-bold text-slate-200">vs4539876@gmail.com</p>
+                        <p id="drawerEmail" class="text-xs font-bold text-slate-200">User</p>
                         <p id="drawerRole" class="text-[10px] text-blue-400 font-semibold mt-0.5">NORMAL USER</p>
                     </div>
                     <button onclick="toggleSidebar(false)" class="text-zinc-400 hover:text-white text-lg">✕</button>
                 </div>
 
-                <!-- Storage Info Bar -->
                 <div class="bg-zinc-900 border border-zinc-800 p-3.5 rounded-2xl space-y-2">
                     <div class="flex justify-between text-[11px] font-semibold text-zinc-300">
-                        <span>Storage Used</span>
-                        <span id="storageText">0.5 GB of 50 GB</span>
+                        <span>Storage Used (50GB Free)</span>
+                        <span id="storageText">1.2 GB of 50 GB</span>
                     </div>
                     <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                        <div id="storageBar" class="bg-blue-500 h-full w-[1%]"></div>
+                        <div id="storageBar" class="bg-blue-500 h-full w-[5%]"></div>
                     </div>
                     <div class="flex space-x-2 pt-1">
                         <button onclick="openPricingModal()" class="flex-1 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-xl text-[10px] font-bold">Get storage</button>
@@ -120,10 +136,10 @@
                     </div>
                 </div>
 
-                <!-- Menu Options List -->
                 <div class="space-y-1 text-xs">
-                    <button onclick="alert('Backup & Sync settings')" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>☁️</span><span>Backup is off</span></button>
-                    <button onclick="alert('Recycle Bin (30 Days)')" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🗑️</span><span>Recycle Bin</span></button>
+                    <button onclick="switchTab('photos'); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🖼️</span><span>My Photos</span></button>
+                    <button onclick="switchTab('recycle'); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🗑️</span><span>Recycle Bin (30 Days)</span></button>
+                    
                     <div id="adminMenuOption" class="hidden pt-2 border-t border-zinc-800">
                         <button onclick="openAdminPanel()" class="w-full text-left px-3 py-2.5 bg-amber-500/10 text-amber-400 rounded-xl font-bold flex items-center space-x-3 border border-amber-500/20"><span>🛡️</span><span>Supreme Owner Panel</span></button>
                     </div>
@@ -135,7 +151,30 @@
         <div class="flex-1 bg-black/60 backdrop-blur-sm" onclick="toggleSidebar(false)"></div>
     </div>
 
-    <!-- CLEAN UPGRADE PLANS MODAL (With Select Buttons) -->
+    <!-- SUPREME OWNER ROLE MANAGER MODAL -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 text-left space-y-4 shadow-2xl">
+            <h3 class="text-sm font-bold text-amber-400 uppercase">Supreme Owner Master Controls</h3>
+            <p class="text-[11px] text-zinc-400">Toggle switches to assign Partner Owner or Simple Admin roles instantly:</p>
+            
+            <div class="space-y-3 max-h-60 overflow-y-auto text-xs">
+                <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
+                    <div>
+                        <p class="font-bold text-slate-200">friend1@gmail.com</p>
+                        <p class="text-[10px] text-zinc-500">Simple Admin (Unlimited Storage)</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" onchange="toggleUserRole(this, 'friend1@gmail.com', 'Admin')" class="sr-only peer">
+                        <div class="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
+            </div>
+
+            <button onclick="closeAdminPanel()" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-slate-200 rounded-xl text-xs font-bold">Close Panel</button>
+        </div>
+    </div>
+
+    <!-- CLEAN UPGRADE PLANS MODAL -->
     <div id="paymentModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
             <div id="planSelectionView" class="space-y-4">
@@ -161,7 +200,6 @@
                 <button onclick="closePaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">Cancel</button>
             </div>
 
-            <!-- UPI Intent QR View -->
             <div id="upiQRView" class="hidden space-y-4">
                 <h3 class="text-base font-bold">Scan & Pay Instantly</h3>
                 <div class="bg-white p-3 rounded-2xl inline-block">
@@ -179,6 +217,14 @@
     </div>
 
     <script>
+        // Database simulation using browser localStorage
+        function getUsersDB() {
+            let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
+            // Default Supreme Owner preset
+            users["vs4539876@gmail.com"] = "admin123"; 
+            return users;
+        }
+
         function togglePassword() {
             const pwd = document.getElementById('loginPassword');
             const btn = document.getElementById('toggleBtn');
@@ -188,27 +234,57 @@
 
         function handleLogin() {
             const identifier = document.getElementById('loginIdentifier').value.trim();
-            if(!identifier) { alert("Please enter login details!"); return; }
+            const password = document.getElementById('loginPassword').value.trim();
 
-            document.getElementById('dashboardScreen').classList.remove('hidden');
-            document.getElementById('drawerEmail').innerText = identifier;
+            if(!identifier || !password) { 
+                alert("Please enter both username/email and password!"); 
+                return; 
+            }
 
-            if(identifier === "vs4539876@gmail.com") {
-                document.getElementById('drawerRole').innerText = "SUPREME OWNER";
-                document.getElementById('drawerRole').className = "text-[10px] text-amber-400 font-bold mt-0.5";
-                document.getElementById('adminMenuOption').classList.remove('hidden');
-                document.getElementById('storageText').innerText = "Unlimited (Master)";
-                document.getElementById('storageBar').style.width = "100%";
+            let users = getUsersDB();
+
+            // Check if user exists and password matches
+            if(users[identifier]) {
+                if(users[identifier] === password) {
+                    // Successful login
+                    document.getElementById('dashboardScreen').classList.remove('hidden');
+                    document.getElementById('drawerEmail').innerText = identifier;
+
+                    if(identifier === "vs4539876@gmail.com") {
+                        document.getElementById('drawerRole').innerText = "SUPREME OWNER (Master Rights)";
+                        document.getElementById('drawerRole').className = "text-[10px] text-amber-400 font-bold mt-0.5";
+                        document.getElementById('adminMenuOption').classList.remove('hidden');
+                        document.getElementById('storageText').innerText = "Unlimited (Master)";
+                        document.getElementById('storageBar').style.width = "100%";
+                    } else {
+                        document.getElementById('drawerRole').innerText = "NORMAL USER (50GB Free)";
+                        document.getElementById('storageText').innerText = "1.2 GB of 50 GB";
+                        document.getElementById('storageBar').style.width = "5%";
+                    }
+                } else {
+                    alert("Incorrect Password! Please enter the correct password.");
+                }
             } else {
-                document.getElementById('drawerRole').innerText = "NORMAL USER (50GB Free)";
-                document.getElementById('storageText').innerText = "1.2 GB of 50 GB";
-                document.getElementById('storageBar').style.width = "5%";
+                alert("Account not found! Please click 'Create new account' below to sign up first.");
             }
         }
 
         function handleSignup() {
-            const input = prompt("Enter Email or Mobile for registration:");
-            if(input) { document.getElementById('loginIdentifier').value = input; alert("Account created with 50GB free storage!"); }
+            const email = prompt("Enter Email or Mobile for registration:");
+            if(!email) return;
+            const pwd = prompt("Create a secure password:");
+            if(!pwd) return;
+
+            let users = getUsersDB();
+            if(users[email]) {
+                alert("Account already exists! Please log in.");
+                return;
+            }
+
+            users[email] = pwd;
+            localStorage.setItem('mycloud_users', JSON.stringify(users));
+            alert("Account created successfully with 50GB free storage! Now you can log in with your password.");
+            document.getElementById('loginIdentifier').value = email;
         }
 
         function handleLogout() {
@@ -223,6 +299,36 @@
             const drawer = document.getElementById('sideDrawer');
             if(open) drawer.classList.remove('hidden');
             else drawer.classList.add('hidden');
+        }
+
+        function switchTab(tab) {
+            if(tab === 'photos') {
+                document.getElementById('photosView').classList.remove('hidden');
+                document.getElementById('recycleBinView').classList.add('hidden');
+            } else if(tab === 'recycle') {
+                document.getElementById('photosView').classList.add('hidden');
+                document.getElementById('recycleBinView').classList.remove('hidden');
+            } else if(tab === 'albums') {
+                alert("Albums tab opened");
+            }
+            toggleSidebar(false);
+        }
+
+        function openAdminPanel() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            toggleSidebar(false);
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function toggleUserRole(checkbox, userEmail, roleName) {
+            if(checkbox.checked) {
+                alert(`${userEmail} successfully promoted to ${roleName}!`);
+            } else {
+                alert(`${roleName} role removed from ${userEmail}.`);
+            }
         }
 
         function openPricingModal() {
@@ -258,10 +364,6 @@
 
         function triggerUpload() {
             alert("File picker active! Routing directly to Discord Channel: 1565403174494408788.");
-        }
-
-        function openAdminPanel() {
-            alert("Supreme Owner Master Control Panel:\n- Manage Partner Owners & Admins\n- Transfer Master Rights\n- Verify UPI Payments");
         }
     </script>
 </body>
