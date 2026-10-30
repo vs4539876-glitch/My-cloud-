@@ -281,7 +281,7 @@
         </div>
     </div>
 
-    <!-- CUSTOM MYCLOUD MODAL POPUP (Replaces browser alert) -->
+    <!-- CUSTOM MYCLOUD MODAL POPUP -->
     <div id="customModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-xs w-full p-6 text-center space-y-4 shadow-2xl">
             <div class="w-12 h-12 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg">
@@ -296,6 +296,9 @@
     </div>
 
     <script>
+        // REPLACE WITH YOUR RENDER BACKEND URL ONCE DEPLOYED
+        const BACKEND_URL = "https://mycloud-backend.onrender.com";
+
         function getUsersDB() {
             let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
             if(!users["vs4539876@gmail.com"]) {
@@ -308,7 +311,6 @@
         let recoveryTargetUser = null;
         let timerInterval = null;
 
-        // Custom Popup function
         function showCustomModal(title, message) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
@@ -431,19 +433,38 @@
             }
 
             recoveryTargetUser = input;
-            triggerOtpDispatch();
+
+            // If input is email, call backend server for real branded email OTP
+            if(input.includes('@')) {
+                fetch(`${BACKEND_URL}/api/send-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: input })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        showCustomModal("OTP Sent", "Branded OTP email sent successfully to your email!");
+                        showPage('otpVerifyPage');
+                        startOtpTimer();
+                    } else {
+                        showCustomModal("Error", "Failed to send email OTP via server.");
+                    }
+                })
+                .catch(err => {
+                    showCustomModal("Connection Error", "Could not connect to backend server.");
+                });
+            } else {
+                // Mobile SMS simulation
+                recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
+                document.getElementById('otpSentInfo').innerText = `SMS OTP sent to mobile ${recoveryTargetUser}: [ ${recoveryOtpCode} ]`;
+                showPage('otpVerifyPage');
+                startOtpTimer();
+            }
         }
 
         function resendOtpCode() {
-            triggerOtpDispatch();
-            showCustomModal("OTP Sent", "New OTP sent successfully!");
-        }
-
-        function triggerOtpDispatch() {
-            recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('otpSentInfo').innerText = `OTP sent to ${recoveryTargetUser}: [ ${recoveryOtpCode} ]`;
-            showPage('otpVerifyPage');
-            startOtpTimer();
+            sendOtpCode();
         }
 
         function startOtpTimer() {
@@ -470,18 +491,34 @@
 
         function verifyOtp() {
             const userOtp = document.getElementById('enteredOtp').value.trim();
-            if(!recoveryOtpCode) {
-                showCustomModal("OTP Expired", "OTP has expired! Please click Resend OTP.");
-                return;
+            
+            if(recoveryTargetUser.includes('@')) {
+                // Verify via backend
+                fetch(`${BACKEND_URL}/api/verify-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: recoveryTargetUser, otp: userOtp })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        clearInterval(timerInterval);
+                        showCustomModal("Success", "OTP Verified Successfully!");
+                        showPage('newPasswordPage');
+                    } else {
+                        showCustomModal("Invalid OTP", "Incorrect or expired OTP!");
+                    }
+                });
+            } else {
+                // Mobile verification check
+                if(userOtp == recoveryOtpCode) {
+                    clearInterval(timerInterval);
+                    showCustomModal("Success", "OTP Verified Successfully!");
+                    showPage('newPasswordPage');
+                } else {
+                    showCustomModal("Invalid OTP", "Incorrect OTP!");
+                }
             }
-            if(userOtp != recoveryOtpCode) {
-                showCustomModal("Invalid OTP", "Incorrect OTP! Please enter correct code.");
-                return;
-            }
-
-            clearInterval(timerInterval);
-            showCustomModal("Success", "OTP Verified Successfully!");
-            showPage('newPasswordPage');
         }
 
         function saveNewPassword() {
