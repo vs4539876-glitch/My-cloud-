@@ -22,7 +22,7 @@
         </div>
 
         <div class="space-y-3">
-            <input type="text" id="loginIdentifier" placeholder="Username, email or mobile number" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500">
+            <input type="text" id="loginIdentifier" placeholder="Username, email address or mobile" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500">
             
             <div class="relative">
                 <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500 pr-12">
@@ -41,109 +41,84 @@
     <div id="signupPage" class="hidden max-w-xs w-full mx-auto space-y-5 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
         <div class="text-center space-y-1">
             <h2 class="text-sm font-bold text-slate-100">Create New Account</h2>
-            <p class="text-[10px] text-zinc-400">Enter your details to get 50GB free cloud storage.</p>
-        </div>
-
-        <div class="space-y-2.5 text-xs">
-            <div>
-                <label class="text-[10px] text-zinc-400 block mb-1">Email Address</label>
-                <input type="email" id="suEmail" placeholder="Enter email" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
-            </div>
-            <div>
-                <label class="text-[10px] text-zinc-400 block mb-1">Mobile Number</label>
-                <input type="tel" id="suPhone" placeholder="Enter mobile number" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
-            </div>
-            <div>
-                <label class="text-[10px] text-zinc-400 block mb-1">Username</label>
-                <input type="text" id="suUsername" placeholder="Choose a username" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
-            </div>
-            <div>
-                <label class="text-[10px] text-zinc-400 block mb-1">Date of Birth (Age)</label>
-                <input type="date" id="suDob" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
-            </div>
-            <div>
-                <label class="text-[10px] text-zinc-400 block mb-1">Password</label>
-                <input type="password" id="suPassword" placeholder="Create password" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
-            </div>
-
-            <button onclick="submitSignup()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition shadow-lg mt-2">Sign up</button>
-            <button onclick="showPage('loginPage')" class="w-full py-1.5 bg-transparent text-zinc-400 hover:text-white text-[11px]">Already have an account? Log in</button>
-        </div>
-    </div>
-
-    <!-- 3. FORGOT PASSWORD & CHOICE PAGE -->
-    <div id="forgotPage" class="hidden max-w-xs w-full mx-auto space-y-5 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
-        <div class="text-center space-y-1">
-            <h2 class="text-sm font-bold text-slate-100">Password Recovery</h2>
-            <p class="text-[10px] text-zinc-400">Choose where you want to receive the OTP.</p>
+            <p class="text-[11px] text-zinc-400">Sign up to get 50GB free cloud storage.</p>
         </div>
 
         <div class="space-y-3 text-xs">
             <div>
-                <label class="text-[10px] text-zinc-400 block mb-1">Registered Email or Mobile</label>
-                <input type="text" id="recoveryInput" placeholder="Enter email or phone" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Email or Mobile Number</label>
+                <input type="text" id="signupIdentifier" placeholder="Enter email or mobile" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
             </div>
             <div>
-                <label class="text-[10px] text-zinc-400 block mb-1">Send OTP via:</label>
-                <select id="otpChannel" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
-                    <option value="email">Registered Email</option>
-                    <option value="phone">Registered Mobile Number</option>
-                </select>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Username</label>
+                <input type="text" id="signupUsername" placeholder="Choose a username" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Date of Birth / Age</label>
+                <input type="date" id="signupAge" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Password</label>
+                <input type="password" id="signupPassword" placeholder="Set password" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
             </div>
 
-            <button onclick="sendOtpCode()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition">Send OTP</button>
-            <button onclick="showPage('loginPage')" class="w-full py-1.5 bg-transparent text-zinc-400 hover:text-white text-[11px]">← Back to login</button>
+            <button onclick="submitSignup()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition shadow-lg mt-1">Sign up</button>
+            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">Already have an account? Log in</button>
         </div>
     </div>
 
-    <!-- 4. ENTER OTP PAGE (With 1.5 min Timer) -->
-    <div id="otpVerifyPage" class="hidden max-w-xs w-full mx-auto space-y-5 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
-        <div class="text-center space-y-1">
-            <h2 class="text-sm font-bold text-slate-100">Enter OTP</h2>
-            <p id="otpSentInfo" class="text-[10px] text-zinc-400"></p>
+    <!-- 3. FORGOT PASSWORD PAGE -->
+    <div id="forgotPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Trouble logging in?</h2>
+            <p class="text-[11px] text-zinc-400">Enter your registered Email or Mobile to receive an OTP.</p>
         </div>
 
-        <div class="space-y-3 text-xs">
-            <input type="text" id="enteredOtp" placeholder="Enter 4-digit OTP" maxlength="4" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none text-center font-bold tracking-widest text-sm">
+        <div class="space-y-3">
+            <input type="text" id="recoveryInput" placeholder="Registered Email or Mobile" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+            <button onclick="sendOtpCode()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs transition">Send OTP</button>
+            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Back to login</button>
+        </div>
+    </div>
+
+    <!-- 4. ENTER OTP PAGE -->
+    <div id="otpVerifyPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Enter OTP Code</h2>
+            <p id="otpSentInfo" class="text-[11px] text-emerald-400 font-mono"></p>
+        </div>
+
+        <div class="space-y-3">
+            <input type="text" id="enteredOtp" placeholder="Enter 4-digit OTP" maxlength="4" class="w-full px-4 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-slate-200 focus:outline-none text-center font-bold tracking-widest">
             
-            <div class="flex justify-between items-center text-[10px] text-zinc-400 px-1">
+            <div class="flex justify-between items-center text-[11px] text-zinc-400 px-1">
                 <span id="timerDisplay">Time left: 01:30</span>
-                <button id="resendBtn" onclick="resendOtpCode()" class="text-blue-400 hover:underline disabled:text-zinc-600" disabled>Resend OTP</button>
+                <button id="resendBtn" onclick="resendOtpCode()" class="text-blue-400 hover:underline disabled:text-zinc-600 disabled:no-underline" disabled>Resend OTP</button>
             </div>
 
-            <button onclick="verifyOtp()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition">Verify OTP</button>
-            <button onclick="showPage('forgotPage')" class="w-full py-1.5 bg-transparent text-zinc-400 hover:text-white text-[11px]">← Change Contact</button>
-        </div>
-    </div>
-
-    <!-- SUCCESS MODAL FOR OTP & RESET -->
-    <div id="successModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-xs w-full p-6 text-center space-y-4 shadow-2xl">
-            <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full mx-auto flex items-center justify-center text-3xl font-bold border border-emerald-500/30">✓</div>
-            <h3 id="successTitle" class="text-sm font-bold text-slate-100">Success</h3>
-            <p id="successDesc" class="text-[11px] text-zinc-400">Operation completed successfully.</p>
-            <button id="successBtn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs transition">Continue</button>
+            <button onclick="verifyOtp()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition">Verify OTP</button>
+            <button onclick="showPage('forgotPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Change Input</button>
         </div>
     </div>
 
     <!-- 5. CREATE NEW PASSWORD PAGE -->
-    <div id="newPasswordPage" class="hidden max-w-xs w-full mx-auto space-y-5 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
-        <div class="text-center space-y-1">
+    <div id="newPasswordPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
             <h2 class="text-sm font-bold text-slate-100">Create New Password</h2>
-            <p class="text-[10px] text-zinc-400">Set a strong secure password for your account.</p>
+            <p class="text-[11px] text-zinc-400">Set a strong new password for your account.</p>
         </div>
 
-        <div class="space-y-3 text-xs">
+        <div class="space-y-3">
             <div class="relative">
-                <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none pr-12">
-                <button type="button" onclick="togglePassword('newPassword', 'toggleNewBtn')" id="toggleNewBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-zinc-400 hover:text-white">Show</button>
+                <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none pr-12">
+                <button type="button" onclick="togglePassword('newPassword', 'toggleNewBtn')" id="toggleNewBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
             </div>
 
-            <button onclick="saveNewPassword()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition shadow-lg">Save New Password</button>
+            <button onclick="saveNewPassword()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs transition shadow-lg">Save New Password</button>
         </div>
     </div>
 
-    <!-- SIGNUP FOOTER -->
+    <!-- SIGNUP FOOTER BUTTON -->
     <div id="signupFooter" class="max-w-xs w-full mx-auto space-y-4 text-center">
         <button onclick="showPage('signupPage')" class="w-full py-3 bg-transparent hover:bg-zinc-900 border border-zinc-800 text-blue-400 font-semibold rounded-xl transition text-xs">Create new account</button>
         <div class="flex items-center justify-center space-x-1 text-xs text-zinc-500">
@@ -195,7 +170,7 @@
                     </div>
                 </div>
                 <div class="pt-6 text-center">
-                    <button onclick="showSuccessModal('Deleted', 'Recycle bin emptied successfully!', () => closeSuccessModal())" class="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-red-400 rounded-full text-xs font-semibold shadow">Delete all</button>
+                    <button onclick="alert('Recycle bin emptied!')" class="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-red-400 rounded-full text-xs font-semibold shadow">Delete all</button>
                 </div>
             </div>
         </main>
@@ -296,11 +271,11 @@
                     <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
-                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span></p>
+                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)</p>
                     <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
                     <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
                 </div>
-                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay</a>
+                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_2](start_span)[span_2](end_span)</a>
                 <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
             </div>
         </div>
@@ -310,13 +285,13 @@
         function getUsersDB() {
             let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
             if(!users["vs4539876@gmail.com"]) {
-                users["vs4539876@gmail.com"] = { password: "admin123", role: "supreme_owner", phone: "8865919649" };
+                users["vs4539876@gmail.com"] = { password: "admin123", role: "supreme_owner" };
             }
             return users;
         }
 
         let recoveryOtpCode = null;
-        let recoveryTargetKey = null;
+        let recoveryTargetUser = null;
         let timerInterval = null;
 
         window.onload = function() {
@@ -362,131 +337,90 @@
             else { pwd.type = "password"; btn.innerText = "Show"; }
         }
 
-        function showSuccessModal(title, desc, callback) {
-            document.getElementById('successTitle').innerText = title;
-            document.getElementById('successDesc').innerText = desc;
-            document.getElementById('successModal').classList.remove('hidden');
-            document.getElementById('successBtn').onclick = callback;
-        }
-
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.add('hidden');
-        }
-
         function handleLogin() {
             const identifier = document.getElementById('loginIdentifier').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
 
             if(!identifier || !password) {
-                showSuccessModal("Error", "Please fill in all fields!", () => closeSuccessModal());
+                alert("Please fill in both fields!");
                 return;
             }
 
             let users = getUsersDB();
-            let foundKey = null;
+            if(users[identifier]) {
+                const userObj = typeof users[identifier] === 'object' ? users[identifier] : { password: users[identifier], role: "user" };
 
-            // Search user by email, phone or username
-            for(let key in users) {
-                let u = users[key];
-                if(key === identifier || u.phone === identifier || u.username === identifier) {
-                    foundKey = key;
-                    break;
-                }
-            }
-
-            if(foundKey) {
-                let userObj = users[foundKey];
                 if(userObj.password === password) {
-                    sessionStorage.setItem('mycloud_logged_in', foundKey);
+                    sessionStorage.setItem('mycloud_logged_in', identifier);
                     showPage('dashboardPage');
-                    setupDashboard(foundKey, userObj.role);
+                    setupDashboard(identifier, userObj.role);
                 } else {
-                    showSuccessModal("Incorrect Password", "Please enter the correct password.", () => closeSuccessModal());
+                    alert("Incorrect Password! Please check your password.");
                 }
             } else {
-                showSuccessModal("Not Found", "Account not found! Please create a new account.", () => closeSuccessModal());
+                alert("Account not found! Please create a new account.");
             }
         }
 
         function submitSignup() {
-            const email = document.getElementById('suEmail').value.trim();
-            const phone = document.getElementById('suPhone').value.trim();
-            const username = document.getElementById('suUsername').value.trim();
-            const dob = document.getElementById('suDob').value.trim();
-            const password = document.getElementById('suPassword').value.trim();
+            const identifier = document.getElementById('signupIdentifier').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const age = document.getElementById('signupAge').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
 
-            if(!email || !phone || !username || !dob || !password) {
-                showSuccessModal("Missing Fields", "Please fill out all registration fields!", () => closeSuccessModal());
+            if(!identifier || !username || !age || !password) {
+                alert("Please fill out all registration fields!");
                 return;
             }
 
             let users = getUsersDB();
-            if(users[email]) {
-                showSuccessModal("Exists", "Account already exists with this email!", () => closeSuccessModal());
+            if(users[identifier]) {
+                alert("Account already exists with this email or mobile number!");
                 return;
             }
 
-            users[email] = {
-                phone: phone,
+            users[identifier] = {
                 username: username,
-                dob: dob,
+                age: age,
                 password: password,
                 role: "user"
             };
 
             localStorage.setItem('mycloud_users', JSON.stringify(users));
-            showSuccessModal("Success ✓", "Account successfully created with 50GB Free Storage!", () => {
-                closeSuccessModal();
-                showPage('loginPage');
-                document.getElementById('loginIdentifier').value = email;
-            });
+            alert("Account created successfully with 50GB Free Storage! Please log in.");
+            document.getElementById('loginIdentifier').value = identifier;
+            showPage('loginPage');
         }
 
         function sendOtpCode() {
             const input = document.getElementById('recoveryInput').value.trim();
-            const channel = document.getElementById('otpChannel').value;
-
-            if(!input) {
-                showSuccessModal("Error", "Please enter your registered email or mobile!", () => closeSuccessModal());
-                return;
-            }
+            if(!input) { alert("Please enter your email or mobile number!"); return; }
 
             let users = getUsersDB();
-            let foundKey = null;
-
-            for(let key in users) {
-                let u = users[key];
-                if(key === input || u.phone === input) {
-                    foundKey = key;
-                    break;
-                }
-            }
-
-            if(!foundKey) {
-                showSuccessModal("Not Found", "This email or mobile number is not registered.", () => closeSuccessModal());
+            if(!users[input]) {
+                alert("This email or mobile number is not registered in MyCloud.");
                 return;
             }
 
-            recoveryTargetKey = foundKey;
+            recoveryTargetUser = input;
+            triggerOtpDispatch();
+        }
+
+        function resendOtpCode() {
+            triggerOtpDispatch();
+            alert("New OTP sent successfully!");
+        }
+
+        function triggerOtpDispatch() {
             recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
-
-            let targetText = channel === 'email' ? `Email (${foundKey})` : `Mobile (${users[foundKey].phone})`;
-            document.getElementById('otpSentInfo').innerText = `OTP securely sent to your ${targetText}. (Simulated OTP: ${recoveryOtpCode})`;
-
+            document.getElementById('otpSentInfo').innerText = `OTP sent to ${recoveryTargetUser}: [ ${recoveryOtpCode} ]`;
             showPage('otpVerifyPage');
             startOtpTimer();
         }
 
-        function resendOtpCode() {
-            recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('otpSentInfo').innerText = `New OTP sent successfully! (Simulated OTP: ${recoveryOtpCode})`;
-            startOtpTimer();
-            showSuccessModal("OTP Resent ✓", "A new OTP has been sent to your registered contact.", () => closeSuccessModal());
-        }
-
         function startOtpTimer() {
             clearInterval(timerInterval);
-            let timeLeft = 90; // 1.5 minutes
+            let timeLeft = 90; 
             const timerDisplay = document.getElementById('timerDisplay');
             const resendBtn = document.getElementById('resendBtn');
             resendBtn.disabled = true;
@@ -499,7 +433,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     timerDisplay.innerText = "OTP Expired!";
-                    recoveryOtpCode = null;
+                    recoveryOtpCode = null; 
                     resendBtn.disabled = false;
                 }
                 timeLeft--;
@@ -509,22 +443,181 @@
         function verifyOtp() {
             const userOtp = document.getElementById('enteredOtp').value.trim();
             if(!recoveryOtpCode) {
-                showSuccessModal("Expired", "OTP has expired! Please click Resend OTP.", () => closeSuccessModal());
+                alert("OTP has expired! Please click Resend OTP.");
                 return;
             }
             if(userOtp != recoveryOtpCode) {
-                showSuccessModal("Incorrect OTP", "Please enter the correct verification code.", () => closeSuccessModal());
+                alert("Incorrect OTP! Please enter correct code.");
                 return;
             }
 
             clearInterval(timerInterval);
-            showSuccessModal("Verified ✓", "OTP Verified Successfully!", () => {
-                closeSuccessModal();
-                showPage('newPasswordPage');
-            });
+            alert("OTP Verified Successfully!");
+            showPage('newPasswordPage');
         }
 
         function saveNewPassword() {
             const newPwd = document.getElementById('newPassword').value.trim();
             if(!newPwd || newPwd.length < 4) {
-                showSuccess
+                alert("Password must be at least 4 characters.");
+                return;
+            }
+
+            let users = getUsersDB();
+            if(typeof users[recoveryTargetUser] === 'object') {
+                users[recoveryTargetUser].password = newPwd;
+            } else {
+                users[recoveryTargetUser] = { password: newPwd, role: "user" };
+            }
+            localStorage.setItem('mycloud_users', JSON.stringify(users));
+
+            alert("Password successfully reset! You can now log in.");
+            document.getElementById('loginIdentifier').value = recoveryTargetUser;
+            document.getElementById('loginPassword').value = '';
+            showPage('loginPage');
+        }
+
+        function setupDashboard(email, role) {
+            if(email === "vs4539876@gmail.com" || role === "supreme_owner") {
+                document.getElementById('drawerEmail').innerHTML = `${email} <span class="text-amber-400 text-sm" title="Supreme Owner">👑</span>`;
+                document.getElementById('drawerRole').innerText = "SUPREME OWNER (Master Leader)";
+                document.getElementById('drawerRole').className = "text-[10px] text-amber-400 font-bold mt-0.5";
+                document.getElementById('adminMenuOption').classList.remove('hidden');
+                document.getElementById('storageText').innerText = "Unlimited (Master)";
+                document.getElementById('storageBar').style.width = "100%";
+            } else {
+                document.getElementById('drawerEmail').innerText = email;
+                document.getElementById('drawerRole').innerText = role.toUpperCase() + " (50GB Free)";
+                document.getElementById('storageText').innerText = "1.2 GB of 50 GB";
+                document.getElementById('storageBar').style.width = "5%";
+            }
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('mycloud_logged_in');
+            showPage('loginPage');
+            document.getElementById('adminMenuOption').classList.add('hidden');
+            document.getElementById('loginIdentifier').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function toggleSidebar(open) {
+            const drawer = document.getElementById('sideDrawer');
+            if(open) drawer.classList.remove('hidden');
+            else drawer.classList.add('hidden');
+        }
+
+        function switchTab(tab) {
+            if(tab === 'photos') {
+                document.getElementById('tabPhotos').classList.remove('hidden');
+                document.getElementById('tabRecycle').classList.add('hidden');
+            } else if(tab === 'recycle') {
+                document.getElementById('tabPhotos').classList.add('hidden');
+                document.getElementById('tabRecycle').classList.remove('hidden');
+            } else if(tab === 'albums') {
+                alert("Albums tab opened");
+            }
+            toggleSidebar(false);
+        }
+
+        function openAdminPanel() {
+            renderUsersAdminList();
+            document.getElementById('adminModal').classList.remove('hidden');
+            toggleSidebar(false);
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function renderUsersAdminList(filter = "") {
+            let users = getUsersDB();
+            let container = document.getElementById('usersListContainer');
+            container.innerHTML = "";
+
+            for(let email in users) {
+                if(filter && !email.toLowerCase().includes(filter.toLowerCase())) continue;
+                let data = typeof users[email] === 'object' ? users[email] : { role: "user" };
+                if(email === "vs4539876@gmail.com") continue;
+
+                let isPartner = data.role === "partner_owner";
+                let isAdmin = data.role === "admin";
+                let isSupreme = data.role === "supreme_owner";
+
+                let html = `
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 space-y-2">
+                        <p class="font-bold text-slate-200">${email}</p>
+                        <div class="flex items-center justify-between text-[11px] pt-1 border-t border-zinc-900">
+                            <span class="text-zinc-400">Partner Owner</span>
+                            <input type="checkbox" ${isPartner ? 'checked' : ''} onchange="updateUserRole('${email}', 'partner_owner', this.checked)">
+                        </div>
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="text-zinc-400">Simple Admin</span>
+                            <input type="checkbox" ${isAdmin ? 'checked' : ''} onchange="updateUserRole('${email}', 'admin', this.checked)">
+                        </div>
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="text-amber-400 font-bold">Supreme Owner 👑</span>
+                            <input type="checkbox" ${isSupreme ? 'checked' : ''} onchange="updateUserRole('${email}', 'supreme_owner', this.checked)">
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            }
+        }
+
+        function filterUsers() {
+            let query = document.getElementById('userSearchInput').value;
+            renderUsersAdminList(query);
+        }
+
+        function updateUserRole(email, roleType, isChecked) {
+            let users = getUsersDB();
+            if(users[email]) {
+                if(typeof users[email] !== 'object') {
+                    users[email] = { password: users[email], role: isChecked ? roleType : 'user' };
+                } else {
+                    users[email].role = isChecked ? roleType : 'user';
+                }
+                localStorage.setItem('mycloud_users', JSON.stringify(users));
+                alert(`Role updated successfully for ${email}!`);
+                renderUsersAdminList();
+            }
+        }
+
+        function openPricingModal() {
+            document.getElementById('planSelectionView').classList.remove('hidden');
+            document.getElementById('upiQRView').classList.add('hidden');
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function resetPaymentModal() {
+            document.getElementById('planSelectionView').classList.remove('hidden');
+            document.getElementById('upiQRView').classList.add('hidden');
+        }
+
+        function selectPlanAndPay(planName, baseAmount) {
+            const randomPaise = (Math.floor(Math.random() * 89) + 10) / 100;
+            const finalAmount = (baseAmount + randomPaise).toFixed(2);
+            const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
+
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+
+            document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
+            document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
+            document.getElementById('modalRefCode').innerText = refCode;
+            document.getElementById('upiIntentBtn').href = upiUrl;
+
+            document.getElementById('planSelectionView').classList.add('hidden');
+            document.getElementById('upiQRView').classList.remove('hidden');
+        }
+
+        function triggerUpload() {
+            alert("File picker active! Routing directly to Discord Channel: 1565403174494408788[span_5](start_span)[span_5](end_span).");
+        }
+    </script>
+</body>
+</html>
