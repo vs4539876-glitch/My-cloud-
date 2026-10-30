@@ -12,7 +12,7 @@
         <span class="text-xs text-slate-400 cursor-pointer hover:text-slate-200">English (UK) ▾</span>
     </div>
 
-    <!-- 1. INSTAGRAM STYLE LOGIN PAGE -->
+    <!-- 1. LOGIN PAGE -->
     <div id="loginPage" class="max-w-xs w-full mx-auto space-y-6 my-auto">
         <div class="text-center space-y-3">
             <div class="w-20 h-20 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 rounded-3xl mx-auto flex items-center justify-center shadow-2xl shadow-pink-500/20">
@@ -37,36 +37,58 @@
         </div>
     </div>
 
-    <!-- 2. FORGOT PASSWORD / OTP RECOVERY PAGE -->
+    <!-- 2. FORGOT PASSWORD: ENTER EMAIL/MOBILE PAGE -->
     <div id="forgotPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
         <div class="text-center space-y-2">
             <h2 class="text-sm font-bold text-slate-100">Trouble logging in?</h2>
             <p class="text-[11px] text-zinc-400">Enter your registered email or mobile to receive an OTP.</p>
         </div>
 
-        <!-- Step A: Send OTP -->
-        <div id="otpSendSection" class="space-y-3">
-            <input type="text" id="recoveryInput" placeholder="Email or Mobile" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+        <div class="space-y-3">
+            <input type="text" id="recoveryInput" placeholder="Registered Email or Mobile" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
             <button onclick="sendOtpCode()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs transition">Send OTP</button>
             <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Back to login</button>
         </div>
+    </div>
 
-        <!-- Step B: Enter OTP & New Password -->
-        <div id="otpVerifySection" class="hidden space-y-3">
-            <p id="otpInfoText" class="text-[10px] text-emerald-400 text-center font-mono"></p>
-            <input type="text" id="enteredOtp" placeholder="Enter 4-digit OTP" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none text-center font-bold tracking-widest">
+    <!-- 3. ENTER OTP PAGE (With 1.5 min Timer & Resend Button) -->
+    <div id="otpVerifyPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Enter OTP Code</h2>
+            <p id="otpSentInfo" class="text-[11px] text-emerald-400 font-mono"></p>
+        </div>
+
+        <div class="space-y-3">
+            <input type="text" id="enteredOtp" placeholder="Enter 4-digit OTP" maxlength="4" class="w-full px-4 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-slate-200 focus:outline-none text-center font-bold tracking-widest">
             
-            <div class="relative">
-                <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none pr-12">
-                <button type="button" onclick="togglePassword('newPassword', 'toggleNewBtn')" id="toggleNewBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
+            <div class="flex justify-between items-center text-[11px] text-zinc-400 px-1">
+                <span id="timerDisplay">Time left: 01:30</span>
+                <button id="resendBtn" onclick="resendOtpCode()" class="text-blue-400 hover:underline disabled:text-zinc-600 disabled:no-underline" disabled>Resend OTP</button>
             </div>
 
-            <button onclick="verifyAndResetPassword()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs transition">Verify & Reset Password</button>
-            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">Cancel</button>
+            <button onclick="verifyOtp()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition">Verify OTP</button>
+            <button onclick="showPage('forgotPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Change Email/Mobile</button>
         </div>
     </div>
 
-    <!-- SIGNUP BUTTON FOOTER -->
+    <!-- 4. CREATE NEW PASSWORD PAGE -->
+    <div id="newPasswordPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Create New Password</h2>
+            <p class="text-[11px] text-zinc-400">Your new password must be different from previously used passwords.</p>
+        </div>
+
+        <div class="space-y-3">
+            <div class="relative">
+                <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none pr-12">
+                <button type="button" onclick="togglePassword('newPassword', 'toggleNewBtn')" id="toggleNewBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
+            </div>
+
+            <button onclick="saveNewPassword()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs transition shadow-lg">Save New Password</button>
+        </div>
+    </div>
+
+    <!-- SIGNUP FOOTER -->
     <div id="signupFooter" class="max-w-xs w-full mx-auto space-y-4 text-center">
         <button onclick="handleSignup()" class="w-full py-3 bg-transparent hover:bg-zinc-900 border border-zinc-800 text-blue-400 font-semibold rounded-xl transition text-xs">Create new account</button>
         <div class="flex items-center justify-center space-x-1 text-xs text-zinc-500">
@@ -75,7 +97,7 @@
         </div>
     </div>
 
-    <!-- 3. GOOGLE PHOTOS STYLE MAIN DASHBOARD -->
+    <!-- 5. GOOGLE PHOTOS STYLE DASHBOARD -->
     <div id="dashboardPage" class="hidden fixed inset-0 bg-black z-50 flex flex-col justify-between">
         <header class="bg-zinc-950 px-4 py-3 flex items-center justify-between border-b border-zinc-900">
             <div class="flex items-center space-x-3 w-full">
@@ -89,9 +111,7 @@
             </div>
         </header>
 
-        <!-- Dynamic Tabs Content -->
         <main class="flex-1 overflow-y-auto p-4 space-y-4">
-            <!-- Photos Tab -->
             <div id="tabPhotos" class="space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Today</h3>
@@ -102,7 +122,6 @@
                 </div>
             </div>
 
-            <!-- Recycle Bin Tab -->
             <div id="tabRecycle" class="hidden space-y-4">
                 <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
                     <div>
@@ -126,7 +145,6 @@
             </div>
         </main>
 
-        <!-- Bottom Google Photos Navigation -->
         <nav class="bg-zinc-950 border-t border-zinc-900 py-2 px-6 flex justify-around items-center">
             <button onclick="switchTab('photos')" class="flex flex-col items-center text-blue-400 space-y-1">
                 <span class="text-lg">🖼️</span>
@@ -149,7 +167,7 @@
             <div class="space-y-6">
                 <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
                     <div>
-                        <p id="drawerEmail" class="text-xs font-bold text-slate-200 flex items-center space-x-1"><span>User</span></p>
+                        <p id="drawerEmail" class="text-xs font-bold text-slate-200">User</p>
                         <p id="drawerRole" class="text-[10px] text-blue-400 font-semibold mt-0.5">NORMAL USER</p>
                     </div>
                     <button onclick="toggleSidebar(false)" class="text-zinc-400 hover:text-white text-lg">✕</button>
@@ -180,29 +198,22 @@
         <div class="flex-1 bg-black/60 backdrop-blur-sm" onclick="toggleSidebar(false)"></div>
     </div>
 
-    <!-- 4. ADVANCED SUPREME OWNER PANEL (Search & Switch Roles) -->
+    <!-- SUPREME OWNER PANEL -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 text-left space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
                 <h3 class="text-sm font-bold text-amber-400 flex items-center space-x-2"><span>👑 Supreme Owner Master Panel</span></h3>
                 <button onclick="closeAdminPanel()" class="text-zinc-400 hover:text-white">✕</button>
             </div>
-
-            <!-- Search User Bar -->
             <div>
                 <input type="text" id="userSearchInput" onkeyup="filterUsers()" placeholder="Search registered user email..." class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
             </div>
-
-            <!-- Users List with Role Switches -->
-            <div id="usersListContainer" class="space-y-3 max-h-60 overflow-y-auto text-xs">
-                <!-- Dynamically populated users -->
-            </div>
-
+            <div id="usersListContainer" class="space-y-3 max-h-60 overflow-y-auto text-xs"></div>
             <button onclick="closeAdminPanel()" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-slate-200 rounded-xl text-xs font-bold">Close Panel</button>
         </div>
     </div>
 
-    <!-- 5. PRICING / UPI PAYMENT MODAL -->
+    <!-- PRICING / UPI PAYMENT MODAL -->
     <div id="paymentModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
             <div id="planSelectionView" class="space-y-4">
@@ -230,18 +241,17 @@
                     <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
-                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)</p>
+                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span></p>
                     <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
                     <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
                 </div>
-                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_2](start_span)[span_2](end_span)</a>
+                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay</a>
                 <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Database simulation via LocalStorage with Default Supreme Owner
         function getUsersDB() {
             let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
             if(!users["vs4539876@gmail.com"]) {
@@ -252,10 +262,13 @@
 
         let recoveryOtpCode = null;
         let recoveryTargetUser = null;
+        let timerInterval = null;
 
         function showPage(pageId) {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('forgotPage').classList.add('hidden');
+            document.getElementById('otpVerifyPage').classList.add('hidden');
+            document.getElementById('newPasswordPage').classList.add('hidden');
             document.getElementById('signupFooter').classList.add('hidden');
             document.getElementById('dashboardPage').classList.add('hidden');
 
@@ -264,8 +277,10 @@
                 document.getElementById('signupFooter').classList.remove('hidden');
             } else if(pageId === 'forgotPage') {
                 document.getElementById('forgotPage').classList.remove('hidden');
-                document.getElementById('otpSendSection').classList.remove('hidden');
-                document.getElementById('otpVerifySection').classList.add('hidden');
+            } else if(pageId === 'otpVerifyPage') {
+                document.getElementById('otpVerifyPage').classList.remove('hidden');
+            } else if(pageId === 'newPasswordPage') {
+                document.getElementById('newPasswordPage').classList.remove('hidden');
             } else if(pageId === 'dashboardPage') {
                 document.getElementById('dashboardPage').classList.remove('hidden');
             }
@@ -278,7 +293,6 @@
             else { pwd.type = "password"; btn.innerText = "Show"; }
         }
 
-        // STRICT LOGIN CHECK
         function handleLogin() {
             const identifier = document.getElementById('loginIdentifier').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
@@ -289,13 +303,10 @@
             }
 
             let users = getUsersDB();
-
             if(users[identifier]) {
-                // Check exact password
-                const userObj = typeof users[identifier] === 'object' ? users[identifier] : { password: users[identifier], role: identifier === "vs4539876@gmail.com" ? "supreme_owner" : "user" };
+                const userObj = typeof users[identifier] === 'object' ? users[identifier] : { password: users[identifier], role: "user" };
 
                 if(userObj.password === password) {
-                    // Success Login
                     showPage('dashboardPage');
                     setupDashboard(identifier, userObj.role);
                 } else {
@@ -324,7 +335,7 @@
             document.getElementById('loginIdentifier').value = email;
         }
 
-        // INSTAGRAM STYLE OTP RECOVERY
+        // --- OTP FLOW WITH 1.5 MIN TIMER & RESEND ---
         function sendOtpCode() {
             const input = document.getElementById('recoveryInput').value.trim();
             if(!input) { alert("Please enter your email or mobile!"); return; }
@@ -336,21 +347,61 @@
             }
 
             recoveryTargetUser = input;
-            recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
-
-            document.getElementById('otpInfoText').innerText = `[OTP sent to ${input}: ${recoveryOtpCode}]`;
-            document.getElementById('otpSendSection').classList.add('hidden');
-            document.getElementById('otpVerifySection').classList.remove('hidden');
+            triggerOtpDispatch();
         }
 
-        function verifyAndResetPassword() {
-            const userOtp = document.getElementById('enteredOtp').value.trim();
-            const newPwd = document.getElementById('newPassword').value.trim();
+        function resendOtpCode() {
+            triggerOtpDispatch();
+            alert("New OTP has been sent successfully!");
+        }
 
-            if(userOtp != recoveryOtpCode) {
-                alert("Incorrect OTP code!");
+        function triggerOtpDispatch() {
+            recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('otpSentInfo').innerText = `OTP sent to ${recoveryTargetUser}: [ ${recoveryOtpCode} ]`;
+            showPage('otpVerifyPage');
+            startOtpTimer();
+        }
+
+        function startOtpTimer() {
+            clearInterval(timerInterval);
+            let timeLeft = 90; // 1.5 minutes (90 seconds)
+            const timerDisplay = document.getElementById('timerDisplay');
+            const resendBtn = document.getElementById('resendBtn');
+            resendBtn.disabled = true;
+
+            timerInterval = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerDisplay.innerText = `Time left: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.innerText = "OTP Expired!";
+                    recoveryOtpCode = null; // Invalidate OTP
+                    resendBtn.disabled = false;
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function verifyOtp() {
+            const userOtp = document.getElementById('enteredOtp').value.trim();
+            if(!recoveryOtpCode) {
+                alert("OTP has expired! Please click Resend OTP.");
                 return;
             }
+            if(userOtp != recoveryOtpCode) {
+                alert("Incorrect OTP! Please enter correct code.");
+                return;
+            }
+
+            clearInterval(timerInterval);
+            alert("OTP Verified Successfully!");
+            showPage('newPasswordPage');
+        }
+
+        function saveNewPassword() {
+            const newPwd = document.getElementById('newPassword').value.trim();
             if(!newPwd || newPwd.length < 4) {
                 alert("Password must be at least 4 characters.");
                 return;
@@ -371,7 +422,6 @@
         }
 
         function setupDashboard(email, role) {
-            let roleText = "NORMAL USER";
             if(email === "vs4539876@gmail.com" || role === "supreme_owner") {
                 document.getElementById('drawerEmail').innerHTML = `${email} <span class="text-amber-400 text-sm" title="Supreme Owner">👑</span>`;
                 document.getElementById('drawerRole').innerText = "SUPREME OWNER (Master Leader)";
@@ -413,7 +463,6 @@
             toggleSidebar(false);
         }
 
-        // SUPREME OWNER PANEL WITH SEARCH & ROLE SWITCHES
         function openAdminPanel() {
             renderUsersAdminList();
             document.getElementById('adminModal').classList.remove('hidden');
@@ -432,7 +481,7 @@
             for(let email in users) {
                 if(filter && !email.toLowerCase().includes(filter.toLowerCase())) continue;
                 let data = typeof users[email] === 'object' ? users[email] : { role: "user" };
-                if(email === "vs4539876@gmail.com") continue; // Skip master supreme owner row
+                if(email === "vs4539876@gmail.com") continue;
 
                 let isPartner = data.role === "partner_owner";
                 let isAdmin = data.role === "admin";
@@ -498,7 +547,7 @@
             const finalAmount = (baseAmount + randomPaise).toFixed(2);
             const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
 
-            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
 
             document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
             document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
@@ -510,7 +559,7 @@
         }
 
         function triggerUpload() {
-            alert("File picker active! Routing directly to Discord Channel: 1565403174494408788[span_5](start_span)[span_5](end_span).");
+            alert("File picker active! Routing directly to Discord Channel: 1565403174494408788[span_2](start_span)[span_2](end_span).");
         }
     </script>
 </body>
