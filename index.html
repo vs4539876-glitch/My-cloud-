@@ -271,11 +271,11 @@
                     <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
-                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)</p>
+                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)</p>
                     <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
                     <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
                 </div>
-                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_3](start_span)[span_3](end_span)</a>
+                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_4](start_span)[span_4](end_span)</a>
                 <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
             </div>
         </div>
@@ -296,8 +296,8 @@
     </div>
 
     <script>
-        // REPLACE WITH YOUR RENDER BACKEND URL ONCE DEPLOYED
-        const BACKEND_URL = "https://mycloud-backend.onrender.com";
+        // Connected to your live Render backend
+        const BACKEND_URL = "https://my-cloud-68xf.onrender.com";
 
         function getUsersDB() {
             let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
@@ -434,7 +434,6 @@
 
             recoveryTargetUser = input;
 
-            // If input is email, call backend server for real branded email OTP
             if(input.includes('@')) {
                 fetch(`${BACKEND_URL}/api/send-otp`, {
                     method: 'POST',
@@ -455,7 +454,6 @@
                     showCustomModal("Connection Error", "Could not connect to backend server.");
                 });
             } else {
-                // Mobile SMS simulation
                 recoveryOtpCode = Math.floor(1000 + Math.random() * 9000);
                 document.getElementById('otpSentInfo').innerText = `SMS OTP sent to mobile ${recoveryTargetUser}: [ ${recoveryOtpCode} ]`;
                 showPage('otpVerifyPage');
@@ -493,7 +491,6 @@
             const userOtp = document.getElementById('enteredOtp').value.trim();
             
             if(recoveryTargetUser.includes('@')) {
-                // Verify via backend
                 fetch(`${BACKEND_URL}/api/verify-otp`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -510,7 +507,6 @@
                     }
                 });
             } else {
-                // Mobile verification check
                 if(userOtp == recoveryOtpCode) {
                     clearInterval(timerInterval);
                     showCustomModal("Success", "OTP Verified Successfully!");
@@ -669,7 +665,7 @@
             const finalAmount = (baseAmount + randomPaise).toFixed(2);
             const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
 
-            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)
 
             document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
             document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
