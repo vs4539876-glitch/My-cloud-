@@ -170,7 +170,7 @@
                     </div>
                 </div>
                 <div class="pt-6 text-center">
-                    <button onclick="alert('Recycle bin emptied!')" class="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-red-400 rounded-full text-xs font-semibold shadow">Delete all</button>
+                    <button onclick="showCustomModal('Recycle Bin', 'Recycle bin emptied successfully.')" class="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-red-400 rounded-full text-xs font-semibold shadow">Delete all</button>
                 </div>
             </div>
         </main>
@@ -271,13 +271,27 @@
                     <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
-                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)</p>
+                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)</p>
                     <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
                     <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
                 </div>
-                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_2](start_span)[span_2](end_span)</a>
+                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_3](start_span)[span_3](end_span)</a>
                 <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
             </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM MYCLOUD MODAL POPUP (Replaces browser alert) -->
+    <div id="customModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-xs w-full p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-12 h-12 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg">
+                <span class="text-xl">☁️</span>
+            </div>
+            <div class="space-y-1">
+                <h3 id="modalTitle" class="text-sm font-bold text-slate-100">MyCloud Notice</h3>
+                <p id="modalMessage" class="text-xs text-zinc-400 leading-relaxed"></p>
+            </div>
+            <button onclick="closeCustomModal()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs transition">OK</button>
         </div>
     </div>
 
@@ -293,6 +307,17 @@
         let recoveryOtpCode = null;
         let recoveryTargetUser = null;
         let timerInterval = null;
+
+        // Custom Popup function
+        function showCustomModal(title, message) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
 
         window.onload = function() {
             let loggedInUser = sessionStorage.getItem('mycloud_logged_in');
@@ -342,7 +367,7 @@
             const password = document.getElementById('loginPassword').value.trim();
 
             if(!identifier || !password) {
-                alert("Please fill in both fields!");
+                showCustomModal("Login Error", "Please fill in both fields!");
                 return;
             }
 
@@ -355,10 +380,10 @@
                     showPage('dashboardPage');
                     setupDashboard(identifier, userObj.role);
                 } else {
-                    alert("Incorrect Password! Please check your password.");
+                    showCustomModal("Login Failed", "Incorrect Password! Please check your password.");
                 }
             } else {
-                alert("Account not found! Please create a new account.");
+                showCustomModal("Account Not Found", "This email or mobile number is not registered in MyCloud.");
             }
         }
 
@@ -369,13 +394,13 @@
             const password = document.getElementById('signupPassword').value.trim();
 
             if(!identifier || !username || !age || !password) {
-                alert("Please fill out all registration fields!");
+                showCustomModal("Registration Error", "Please fill out all registration fields!");
                 return;
             }
 
             let users = getUsersDB();
             if(users[identifier]) {
-                alert("Account already exists with this email or mobile number!");
+                showCustomModal("Account Exists", "Account already exists with this email or mobile number!");
                 return;
             }
 
@@ -387,18 +412,21 @@
             };
 
             localStorage.setItem('mycloud_users', JSON.stringify(users));
-            alert("Account created successfully with 50GB Free Storage! Please log in.");
+            showCustomModal("Success", "Account created successfully with 50GB Free Storage! Please log in.");
             document.getElementById('loginIdentifier').value = identifier;
             showPage('loginPage');
         }
 
         function sendOtpCode() {
             const input = document.getElementById('recoveryInput').value.trim();
-            if(!input) { alert("Please enter your email or mobile number!"); return; }
+            if(!input) { 
+                showCustomModal("Input Error", "Please enter your email or mobile number!"); 
+                return; 
+            }
 
             let users = getUsersDB();
             if(!users[input]) {
-                alert("This email or mobile number is not registered in MyCloud.");
+                showCustomModal("Not Registered", "This email or mobile number is not registered in MyCloud.");
                 return;
             }
 
@@ -408,7 +436,7 @@
 
         function resendOtpCode() {
             triggerOtpDispatch();
-            alert("New OTP sent successfully!");
+            showCustomModal("OTP Sent", "New OTP sent successfully!");
         }
 
         function triggerOtpDispatch() {
@@ -443,23 +471,23 @@
         function verifyOtp() {
             const userOtp = document.getElementById('enteredOtp').value.trim();
             if(!recoveryOtpCode) {
-                alert("OTP has expired! Please click Resend OTP.");
+                showCustomModal("OTP Expired", "OTP has expired! Please click Resend OTP.");
                 return;
             }
             if(userOtp != recoveryOtpCode) {
-                alert("Incorrect OTP! Please enter correct code.");
+                showCustomModal("Invalid OTP", "Incorrect OTP! Please enter correct code.");
                 return;
             }
 
             clearInterval(timerInterval);
-            alert("OTP Verified Successfully!");
+            showCustomModal("Success", "OTP Verified Successfully!");
             showPage('newPasswordPage');
         }
 
         function saveNewPassword() {
             const newPwd = document.getElementById('newPassword').value.trim();
             if(!newPwd || newPwd.length < 4) {
-                alert("Password must be at least 4 characters.");
+                showCustomModal("Weak Password", "Password must be at least 4 characters.");
                 return;
             }
 
@@ -471,7 +499,7 @@
             }
             localStorage.setItem('mycloud_users', JSON.stringify(users));
 
-            alert("Password successfully reset! You can now log in.");
+            showCustomModal("Password Reset", "Password successfully reset! You can now log in.");
             document.getElementById('loginIdentifier').value = recoveryTargetUser;
             document.getElementById('loginPassword').value = '';
             showPage('loginPage');
@@ -515,7 +543,7 @@
                 document.getElementById('tabPhotos').classList.add('hidden');
                 document.getElementById('tabRecycle').classList.remove('hidden');
             } else if(tab === 'albums') {
-                alert("Albums tab opened");
+                showCustomModal("Albums", "Albums tab opened");
             }
             toggleSidebar(false);
         }
@@ -579,7 +607,7 @@
                     users[email].role = isChecked ? roleType : 'user';
                 }
                 localStorage.setItem('mycloud_users', JSON.stringify(users));
-                alert(`Role updated successfully for ${email}!`);
+                showCustomModal("Role Updated", `Role updated successfully for ${email}!`);
                 renderUsersAdminList();
             }
         }
@@ -604,7 +632,7 @@
             const finalAmount = (baseAmount + randomPaise).toFixed(2);
             const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
 
-            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)
 
             document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
             document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
@@ -616,7 +644,7 @@
         }
 
         function triggerUpload() {
-            alert("File picker active! Routing directly to Discord Channel: 1565403174494408788[span_5](start_span)[span_5](end_span).");
+            showCustomModal("Upload", "File picker active! Routing directly to Discord Channel: 1565403174494408788.");
         }
     </script>
 </body>
