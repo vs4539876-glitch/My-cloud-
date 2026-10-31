@@ -184,7 +184,7 @@
                 <span class="text-lg">🗑️</span>
                 <span class="text-[10px] font-medium">Recycle Bin</span>
             </button>
-            <button onclick="openPricingModal()" class="flex flex-col items-center text-amber-400 hover:text-amber-300 space-y-1">
+            <button onclick="openPricingModalFromDirect()" class="flex flex-col items-center text-amber-400 hover:text-amber-300 space-y-1">
                 <span class="text-lg">⚡</span>
                 <span class="text-[10px] font-medium">Upgrade</span>
             </button>
@@ -217,14 +217,14 @@
                 <div class="space-y-1 text-xs">
                     <button onclick="switchTab('photos'); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🖼️</span><span>My Files</span></button>
                     <button onclick="switchTab('recycle'); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🗑️</span><span>Recycle Bin</span></button>
-                    <button onclick="openPricingModal(); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-amber-400 flex items-center space-x-3"><span>⚡</span><span>Upgrade Membership</span></button>
+                    <button onclick="openPricingModalFromMenu()" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-amber-400 flex items-center space-x-3"><span>⚡</span><span>Upgrade Membership</span></button>
                     <a href="mailto:vs4539876@gmail.com" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>💬</span><span>Customer Support</span></a>
                     
                     <!-- MASTER / SUPREME OWNER PANEL OPTION -->
                     <div id="adminMenuOption" class="hidden pt-2 border-t border-zinc-800 space-y-1">
-                        <button onclick="openAdminPanel()" class="w-full text-left px-3 py-2.5 bg-amber-500/10 text-amber-400 rounded-xl font-bold flex items-center space-x-3 border border-amber-500/20"><span>👑</span><span>Supreme Owner Panel</span></button>
-                        <button onclick="openStatsModal()" class="w-full text-left px-3 py-2.5 bg-blue-500/10 text-blue-400 rounded-xl font-bold flex items-center space-x-3 border border-blue-500/20"><span>📊</span><span>View Users & Statistics</span></button>
-                        <button onclick="openPartnerRequestsModal()" class="w-full text-left px-3 py-2.5 bg-purple-500/10 text-purple-400 rounded-xl font-bold flex items-center space-x-3 border border-purple-500/20"><span>📋</span><span>Partner Requests</span></button>
+                        <button onclick="openAdminPanelFromMenu()" class="w-full text-left px-3 py-2.5 bg-amber-500/10 text-amber-400 rounded-xl font-bold flex items-center space-x-3 border border-amber-500/20"><span>👑</span><span>Supreme Owner Panel</span></button>
+                        <button onclick="openStatsModalFromMenu()" class="w-full text-left px-3 py-2.5 bg-blue-500/10 text-blue-400 rounded-xl font-bold flex items-center space-x-3 border border-blue-500/20"><span>📊</span><span>View Users & Statistics</span></button>
+                        <button onclick="openPartnerRequestsModalFromMenu()" class="w-full text-left px-3 py-2.5 bg-purple-500/10 text-purple-400 rounded-xl font-bold flex items-center space-x-3 border border-purple-500/20"><span>📋</span><span>Partner Requests</span></button>
                     </div>
                 </div>
             </div>
@@ -256,9 +256,7 @@
                 <h3 class="text-sm font-bold text-blue-400">📊 Users Statistics</h3>
                 <button onclick="closeStatsModal()" class="text-zinc-400 hover:text-white">✕</button>
             </div>
-            <div id="statsContent" class="space-y-3 text-xs">
-                <!-- Count will inject here -->
-            </div>
+            <div id="statsContent" class="space-y-3 text-xs"></div>
             <button onclick="closeStatsModal()" class="w-full py-2 bg-zinc-800 text-white rounded-xl text-xs font-bold">Close</button>
         </div>
     </div>
@@ -277,39 +275,95 @@
         </div>
     </div>
 
-    <!-- PRICING / UNIQUE DECIMAL UPI PAYMENT MODAL -->
+    <!-- PRICING / MONTHLY & YEARLY & UPI PAYMENT MODAL -->
     <div id="paymentModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
             <div id="planSelectionView" class="space-y-4">
-                <h3 class="text-base font-bold text-slate-100">Upgrade Membership (65% 1st Month Off)</h3>
-                <div class="space-y-2 text-left text-xs">
+                <div class="space-y-1">
+                    <h3 class="text-base font-bold text-slate-100">Choose your storage plan</h3>
+                    <p class="text-[11px] text-amber-400 font-semibold">Welcome new users: 1st time 1 month 65% off (Only new users)</p>
+                </div>
+
+                <!-- Monthly / Yearly Toggle Switch -->
+                <div class="grid grid-cols-2 bg-zinc-950 p-1 rounded-xl border border-zinc-800 text-xs font-semibold">
+                    <button id="monthlyTabBtn" onclick="switchPricingTab('monthly')" class="py-2 rounded-lg bg-blue-600 text-white transition">Monthly</button>
+                    <button id="yearlyTabBtn" onclick="switchPricingTab('yearly')" class="py-2 rounded-lg text-zinc-400 hover:text-white transition">Yearly</button>
+                </div>
+
+                <!-- MONTHLY PLANS CONTAINER -->
+                <div id="monthlyPlansList" class="space-y-2 text-left text-xs">
                     <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
-                        <div><p class="font-bold text-blue-400">30 GB Monthly</p><p class="text-[10px] text-zinc-400">₹100 / month</p></div>
-                        <button onclick="selectPlanAndPay('30GB_MONTHLY', 100)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                        <div>
+                            <p class="font-bold text-blue-400">30 GB Monthly</p>
+                            <p class="text-[10px] text-zinc-400">
+                                <span class="line-through text-red-400">₹100</span> 
+                                <span class="text-emerald-400 font-bold ml-1">₹35.00 / month</span>
+                            </p>
+                        </div>
+                        <button onclick="selectPlanAndPay('30GB_MONTHLY', 35)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                     <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
-                        <div><p class="font-bold text-blue-400">60 GB Monthly</p><p class="text-[10px] text-zinc-400">₹200 / month</p></div>
-                        <button onclick="selectPlanAndPay('60GB_MONTHLY', 200)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                        <div>
+                            <p class="font-bold text-blue-400">60 GB Monthly</p>
+                            <p class="text-[10px] text-zinc-400">
+                                <span class="line-through text-red-400">₹200</span> 
+                                <span class="text-emerald-400 font-bold ml-1">₹70.00 / month</span>
+                            </p>
+                        </div>
+                        <button onclick="selectPlanAndPay('60GB_MONTHLY', 70)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
-                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
-                        <div><p class="font-bold text-amber-400">100 GB (Popular)</p><p class="text-[10px] text-zinc-400">₹350 / month</p></div>
-                        <button onclick="selectPlanAndPay('100GB_MONTHLY', 350)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between relative">
+                        <div>
+                            <p class="font-bold text-amber-400">100 GB (Popular)</p>
+                            <p class="text-[10px] text-zinc-400">
+                                <span class="line-through text-red-400">₹350</span> 
+                                <span class="text-emerald-400 font-bold ml-1">₹122.50 / month</span>
+                            </p>
+                        </div>
+                        <button onclick="selectPlanAndPay('100GB_MONTHLY', 122.5)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                 </div>
+
+                <!-- YEARLY PLANS CONTAINER -->
+                <div id="yearlyPlansList" class="hidden space-y-2 text-left text-xs">
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
+                        <div>
+                            <p class="font-bold text-blue-400">30 GB Yearly</p>
+                            <p class="text-[10px] text-zinc-400">₹1,200 / year</p>
+                        </div>
+                        <button onclick="selectPlanAndPay('30GB_YEARLY', 1200)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                    </div>
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
+                        <div>
+                            <p class="font-bold text-blue-400">60 GB Yearly</p>
+                            <p class="text-[10px] text-zinc-400">₹2,400 / year</p>
+                        </div>
+                        <button onclick="selectPlanAndPay('60GB_YEARLY', 2400)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                    </div>
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
+                        <div>
+                            <p class="font-bold text-amber-400">100 GB Yearly</p>
+                            <p class="text-[10px] text-zinc-400">₹4,200 / year</p>
+                        </div>
+                        <button onclick="selectPlanAndPay('100GB_YEARLY', 4200)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                    </div>
+                </div>
+
                 <button onclick="closePaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">Cancel</button>
             </div>
 
+            <!-- UPI QR & UNIQUE DECIMAL VIEW -->
             <div id="upiQRView" class="hidden space-y-4">
-                <h3 class="text-base font-bold">Scan & Pay (Unique Decimal Auto-Verification)</h3>
+                <h3 class="text-base font-bold">Scan & Pay Instantly</h3>
                 <div class="bg-white p-3 rounded-2xl inline-block">
                     <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
-                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_8](start_span)[span_8](end_span)</p>
-                    <p><strong>Unique Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
-                    <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
+                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span></p>
+                    <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.25</span></p>
+                    <p><strong>Note/Serial Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
                 </div>
-                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_9](start_span)[span_9](end_span)</a>
+                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay</a>
                 <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
             </div>
         </div>
@@ -331,6 +385,7 @@
 
     <script>
         const BACKEND_URL = "https://my-cloud-zeta.vercel.app";
+        let openedFromMenu = false; // Flag to track if modal was opened from drawer menu
 
         function getUsersDB() {
             let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
@@ -571,7 +626,6 @@
                 document.getElementById('storageBar').style.width = "15%";
             }
 
-            // Check Expiry & 15-day Grace Period Warning
             if(userObj.membershipExpiry && new Date(userObj.membershipExpiry) < new Date()) {
                 document.getElementById('expiryWarningBanner').classList.remove('hidden');
             }
@@ -612,6 +666,25 @@
                 document.getElementById('tabRecycle').classList.remove('hidden');
             }
             toggleSidebar(false);
+        }
+
+        function switchPricingTab(tab) {
+            const monthlyBtn = document.getElementById('monthlyTabBtn');
+            const yearlyBtn = document.getElementById('yearlyTabBtn');
+            const monthlyList = document.getElementById('monthlyPlansList');
+            const yearlyList = document.getElementById('yearlyPlansList');
+
+            if(tab === 'monthly') {
+                monthlyBtn.className = "py-2 rounded-lg bg-blue-600 text-white transition";
+                yearlyBtn.className = "py-2 rounded-lg text-zinc-400 hover:text-white transition";
+                monthlyList.classList.remove('hidden');
+                yearlyList.classList.add('hidden');
+            } else {
+                yearlyBtn.className = "py-2 rounded-lg bg-blue-600 text-white transition";
+                monthlyBtn.className = "py-2 rounded-lg text-zinc-400 hover:text-white transition";
+                yearlyList.classList.remove('hidden');
+                monthlyList.classList.add('hidden');
+            }
         }
 
         function triggerUpload() {
@@ -677,14 +750,71 @@
             });
         }
 
-        // SUPREME OWNER ROLE & STATS MANAGEMENT
-        function openAdminPanel() {
+        // --- MENU-SPECIFIC OPEN FUNCTIONS ---
+        function openAdminPanelFromMenu() {
+            toggleSidebar(false);
+            openedFromMenu = true;
             renderUsersAdminList();
             document.getElementById('adminModal').classList.remove('hidden');
-            toggleSidebar(false);
         }
 
-        function closeAdminPanel() { document.getElementById('adminModal').classList.add('hidden'); }
+        function openStatsModalFromMenu() {
+            toggleSidebar(false);
+            openedFromMenu = true;
+            loadStatsData();
+            document.getElementById('statsModal').classList.remove('hidden');
+        }
+
+        function openPartnerRequestsModalFromMenu() {
+            toggleSidebar(false);
+            openedFromMenu = true;
+            document.getElementById('partnerRequestsModal').classList.remove('hidden');
+        }
+
+        function openPricingModalFromMenu() {
+            toggleSidebar(false);
+            openedFromMenu = true;
+            openPricingModal();
+        }
+
+        // --- DIRECT OPEN FUNCTIONS (From Dashboard Footer etc.) ---
+        function openPricingModalFromDirect() {
+            openedFromMenu = false;
+            openPricingModal();
+        }
+
+        // --- CLOSE FUNCTIONS WITH STEP-BACK LOGIC ---
+        function closeAdminPanel() {
+            document.getElementById('adminModal').classList.add('hidden');
+            if(openedFromMenu) {
+                toggleSidebar(true);
+                openedFromMenu = false;
+            }
+        }
+
+        function closeStatsModal() {
+            document.getElementById('statsModal').classList.add('hidden');
+            if(openedFromMenu) {
+                toggleSidebar(true);
+                openedFromMenu = false;
+            }
+        }
+
+        function closePartnerRequestsModal() {
+            document.getElementById('partnerRequestsModal').classList.add('hidden');
+            if(openedFromMenu) {
+                toggleSidebar(true);
+                openedFromMenu = false;
+            }
+        }
+
+        function closePaymentModal() { 
+            document.getElementById('paymentModal').classList.add('hidden');
+            if(openedFromMenu) {
+                toggleSidebar(true);
+                openedFromMenu = false;
+            }
+        }
 
         function renderUsersAdminList(filter = "") {
             let users = getUsersDB();
@@ -726,7 +856,7 @@
             }
         }
 
-        function openStatsModal() {
+        function loadStatsData() {
             let users = getUsersDB();
             let now = new Date();
             let newMembers = 0, oldMembers = 0, loggedOut = 0, totalAdmins = 0;
@@ -751,16 +881,7 @@
                     <p class="text-purple-400">Total Admins / Partners: <strong>${totalAdmins}</strong></p>
                 </div>
             `;
-            document.getElementById('statsModal').classList.remove('hidden');
-            toggleSidebar(false);
         }
-
-        function closeStatsModal() { document.getElementById('statsModal').classList.add('hidden'); }
-        function openPartnerRequestsModal() {
-            document.getElementById('partnerRequestsModal').classList.remove('hidden');
-            toggleSidebar(false);
-        }
-        function closePartnerRequestsModal() { document.getElementById('partnerRequestsModal').classList.add('hidden'); }
 
         function openPricingModal() {
             document.getElementById('planSelectionView').classList.remove('hidden');
@@ -768,18 +889,16 @@
             document.getElementById('paymentModal').classList.remove('hidden');
         }
 
-        function closePaymentModal() { document.getElementById('paymentModal').classList.add('hidden'); }
         function resetPaymentModal() {
             document.getElementById('planSelectionView').classList.remove('hidden');
             document.getElementById('upiQRView').classList.add('hidden');
         }
 
         function selectPlanAndPay(planName, baseAmount) {
-            const randomPaise = (Math.floor(Math.random() * 89) + 10) / 100;
-            const finalAmount = (baseAmount + randomPaise).toFixed(2);
+            const finalAmount = (baseAmount + 0.25).toFixed(2);
             const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
 
-            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;
 
             document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
             document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
