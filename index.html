@@ -11,8 +11,6 @@
             --accent: #38bdf8;
             --text: #f8fafc;
             --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #22c55e;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -51,7 +49,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-        .btn-danger { background: var(--danger); color: white; }
         .container {
             max-width: 1000px;
             margin: 30px auto;
@@ -94,15 +91,6 @@
             text-decoration: none;
         }
         .menu-item:hover { background: #334155; }
-        .crown { color: gold; font-size: 18px; }
-        .switch-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #334155; padding: 10px; text-align: left; }
-        th { background: #0f172a; }
     </style>
 </head>
 <body>
@@ -112,34 +100,29 @@
             ☁️ MyCloud
         </div>
         <div class="nav-controls">
-            <!-- Profile Button (Top-Left / Header Right) -->
             <button class="btn" onclick="toggleProfileMenu()">👤 Profile</button>
-            <!-- Three Line Menu for Supreme Owner / Partner Owner -->
             <button class="btn" id="threeLineBtn" style="display:none;" onclick="toggleThreeLineMenu()">☰ Menu</button>
         </div>
     </header>
 
-    <!-- Profile Dropdown Menu -->
     <div id="profileMenu" class="menu-dropdown">
         <div style="padding: 10px; font-weight: bold; border-bottom: 1px solid #475569;" id="profileHeaderName">User Profile</div>
-        <a class="menu-item" onclick="openEditProfile()">Edit Profile</a>
-        <a class="menu-item" onclick="openUpgradeMembership()">Upgrade Membership</a>
+        <a class="menu-item" onclick="alert('Edit Profile clicked')">Edit Profile</a>
+        <a class="menu-item" onclick="alert('Upgrade Membership clicked')">Upgrade Membership</a>
         <a class="menu-item" href="mailto:vs4539876@gmail.com">Customer Support</a>
-        <a class="menu-item" onclick="logoutUser()" style="color: var(--danger);">Logout</a>
+        <a class="menu-item" onclick="alert('Logout clicked')" style="color: var(--danger);">Logout</a>
     </div>
 
-    <!-- Supreme Owner / Partner Owner Three-Line Menu Dropdown -->
     <div id="threeLineMenu" class="three-line-menu">
-        <div style="padding: 10px; font-weight: bold; border-bottom: 1px solid #475569; display: flex; align-items: center; gap: 5px;">
-            <span id="supremeOwnerDisplay">👑 Supreme Owner</span>
+        <div style="padding: 10px; font-weight: bold; border-bottom: 1px solid #475569;">
+            👑 Supreme Owner (Vipin)
         </div>
-        <a class="menu-item" onclick="openManageMembers()">Make a Member / Roles</a>
-        <a class="menu-item" onclick="openPartnerRequests()">Partner Owner Requests</a>
-        <a class="menu-item" onclick="openViewUsersStats()">View Users & Statistics</a>
+        <a class="menu-item" onclick="alert('Make a Member / Roles clicked')">Make a Member / Roles</a>
+        <a class="menu-item" onclick="alert('Partner Requests clicked')">Partner Owner Requests</a>
+        <a class="menu-item" onclick="alert('View Users & Statistics clicked')">View Users & Statistics</a>
     </div>
 
-    <div class="container" id="mainContainer">
-        <!-- Expiry Warning Banner (English) -->
+    <div class="container">
         <div id="expiryWarning" class="warning-banner" style="display:none;">
             Your membership has expired! Please download and clear your extra data within 15 days, otherwise the data will be locked.
         </div>
@@ -150,35 +133,23 @@
         <div style="margin-top: 20px;">
             <button class="btn">Upload Files</button>
         </div>
-
-        <div style="margin-top: 30px;">
-            <h3>Your Files & Secure Storage</h3>
-            <p>Storage Used: <span id="storageUsedText">0 GB</span> / <span id="storageLimitText">5 GB</span></p>
-        </div>
     </div>
 
     <script>
-        // Mock logged in user state (Replace with dynamic session info after login)
         let currentUser = {
             email: 'vs4539876@gmail.com',
             name: 'Vipin Singh',
             role: 'Supreme Owner',
-            membershipExpired: true // set true to test 15-day warning banner
+            membershipExpired: false
         };
 
         window.onload = function() {
-            // Check roles and display UI elements
             if (currentUser.role === 'Supreme Owner' || currentUser.role === 'Partner Owner') {
                 document.getElementById('threeLineBtn').style.display = 'block';
-                if(currentUser.role === 'Supreme Owner') {
-                    document.getElementById('supremeOwnerDisplay.innerHTML') = '👑 <span class="crown">👑</span> Supreme Owner (vipin)';
-                }
             }
-
             if (currentUser.membershipExpired) {
                 document.getElementById('expiryWarning').style.display = 'block';
             }
-
             document.getElementById('profileHeaderName').innerText = `${currentUser.name} (${currentUser.role})`;
         };
 
@@ -190,23 +161,6 @@
         function toggleThreeLineMenu() {
             document.getElementById('threeLineMenu').classList.toggle('active');
             document.getElementById('profileMenu').classList.remove('active');
-        }
-
-        function openEditProfile() { alert('Opening Edit Profile modal...'); }
-        function openUpgradeMembership() { alert('Opening Upgrade Membership & Plans (65% 1st month discount & unique decimals)...'); }
-        function openManageMembers() { alert('Opening Member & Role Management Panel with Search (Email/Username)...'); }
-        function openPartnerRequests() { alert('Opening Partner Owner Requests list for Admin approval...'); }
-        function openViewUsersStats() { alert('Opening Statistics: New Members, Old Members, Logged Out, and Active Admins count...'); }
-        
-        function logoutUser() {
-            fetch('/api/logout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: currentUser.email })
-            }).then(() => {
-                alert('Logged out successfully.');
-                window.location.reload();
-            });
         }
     </script>
 </body>
