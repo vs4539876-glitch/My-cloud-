@@ -8,8 +8,13 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Kyunki index.html root mein hai, isliye __dirname use kiya hai
+// Static files (HTML, CSS, JS) serve karne ke liye root folder ka path
 app.use(express.static(__dirname));
+
+// ⭐ Root URL par index.html file serve karne ka explicit route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // In-memory databases
 let users = [
@@ -146,28 +151,6 @@ app.get('/api/admin/stats', (req, res) => {
     },
     users
   });
-});
-
-// Update Role Route
-app.post('/api/admin/update-role', (req, res) => {
-  const { targetEmail, newRole, requesterEmail } = req.body;
-  const requester = users.find(u => u.email === requesterEmail);
-  const targetUser = users.find(u => u.email === targetEmail);
-
-  if (!requester || !targetUser) return res.status(404).json({ success: false, message: 'User not found.' });
-
-  if (requester.role === 'Supreme Owner') {
-    targetUser.role = newRole;
-    if (newRole === 'Admin' || newRole === 'Partner Owner') {
-      targetUser.storageLimit = 999999;
-    }
-    res.json({ success: true, message: `Role updated to ${newRole} successfully.` });
-  } else if (requester.role === 'Partner Owner' && newRole === 'Admin') {
-    partnerRequests.push({ targetEmail, requesterEmail, status: 'Pending', requestedRole: 'Admin' });
-    res.json({ success: true, message: 'Admin creation request sent to Supreme Owner.' });
-  } else {
-    res.status(403).json({ success: false, message: 'Unauthorized action.' });
-  }
 });
 
 const PORT = process.env.PORT || 3000;
