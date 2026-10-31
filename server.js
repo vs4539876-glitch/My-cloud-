@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'vs4539876@gmail.com',
-        pass: 'yahan_apna_gmail_app_password_dalein' // Apna Gmail App Password yahan rakhein
+        pass: 'inpo kqlu iinc iycm'
     }
 });
 
