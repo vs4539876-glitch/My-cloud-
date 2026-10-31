@@ -167,6 +167,17 @@ app.post('/api/admin/accept-payment', (req, res) => {
   res.json({ success: true, message: 'Membership successfully activated for the user!' });
 });
 
+// ⭐ Cancel Payment Request Route
+app.post('/api/admin/cancel-payment', (req, res) => {
+  const { requestId } = req.body;
+  const reqObj = paymentRequests.find(r => r.id === requestId);
+
+  if (!reqObj) return res.status(404).json({ success: false, message: 'Request nahi mili.' });
+
+  reqObj.status = 'Cancelled';
+  res.json({ success: true, message: 'Payment request cancelled successfully.' });
+});
+
 // Admin Stats
 app.get('/api/admin/stats', (req, res) => {
   const now = new Date();
