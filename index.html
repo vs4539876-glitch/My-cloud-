@@ -925,7 +925,12 @@
                             <p class="font-bold text-slate-200">User: @${req.username} (${req.email})</p>
                             <p class="text-amber-400">Plan: ${req.planName} (${req.storageGB}GB)</p>
                             <p class="text-zinc-400">Status: <span class="text-yellow-500 font-bold">${req.status}</span></p>
-                            ${req.status === 'Pending' ? `<button onclick="acceptPaymentRequest(${req.id})" class="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs">Accept & Start Membership</button>` : ''}
+                            ${req.status === 'Pending' ? `
+                                <div class="flex space-x-2 pt-1">
+                                    <button onclick="acceptPaymentRequest(${req.id})" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs">Accept</button>
+                                    <button onclick="cancelPaymentRequest(${req.id})" class="flex-1 py-1.5 bg-red-600/80 hover:bg-red-600 text-white font-bold rounded-xl text-xs">Cancel</button>
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                 });
@@ -941,6 +946,19 @@
             .then(res => res.json())
             .then(data => {
                 showCustomModal("Success", data.message);
+                loadPaymentRequests();
+            });
+        }
+
+        function cancelPaymentRequest(requestId) {
+            fetch(`${BACKEND_URL}/api/admin/cancel-payment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ requestId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                showCustomModal("Cancelled", "Payment request cancelled successfully.");
                 loadPaymentRequests();
             });
         }
