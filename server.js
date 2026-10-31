@@ -85,7 +85,7 @@ app.post('/api/verify-otp', (req, res) => {
       password: password || '123456',
       role: 'User',
       storageUsed: 0,
-      storageLimit: 5,
+      storageLimit: 50,
       membershipType: 'Free',
       expiryDate: null,
       status: 'Active',
@@ -150,6 +150,31 @@ app.get('/api/admin/stats', (req, res) => {
       totalAdmins: adminCount
     },
     users
+  });
+});
+
+// ⭐ AUTOMATIC PAYMENT VERIFICATION & MEMBERSHIP ACTIVATION ROUTE
+app.post('/api/verify-payment', (req, res) => {
+  const { email, planType, storageGB } = req.body;
+  const user = users.find(u => u.email === email);
+
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User nahi mila.' });
+  }
+
+  // Automatic activate membership for 30 days & update storage limit
+  let newExpiry = new Date();
+  newExpiry.setDate(newExpiry.getDate() + 30);
+
+  user.membershipType = planType;
+  user.storageLimit = storageGB;
+  user.expiryDate = newExpiry.toISOString();
+  user.status = 'Active';
+
+  res.json({ 
+    success: true, 
+    message: 'Payment verified successfully! Membership activated.', 
+    user 
   });
 });
 
