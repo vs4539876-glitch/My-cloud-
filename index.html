@@ -10,7 +10,7 @@
 
     <div class="text-center flex justify-between items-center max-w-xs mx-auto w-full">
         <span class="text-xs text-slate-400 cursor-pointer hover:text-slate-200">English (UK) ▾</span>
-        <span id="topSupremeOwnerBadge" class="hidden text-xs text-amber-400 font-bold flex items-center gap-1">👑 Supreme Owner: Vipin</span>
+        <span id="topSupremeOwnerBadge" class="hidden text-xs text-amber-400 font-bold flex items-center gap-1">👑 Supreme Owner: Sanjeev Thakur</span>
     </div>
 
     <!-- MEMBERSHIP EXPIRY WARNING BANNER -->
@@ -225,6 +225,8 @@
                         <button onclick="openAdminPanelFromMenu()" class="w-full text-left px-3 py-2.5 bg-amber-500/10 text-amber-400 rounded-xl font-bold flex items-center space-x-3 border border-amber-500/20"><span>👑</span><span>Supreme Owner Panel</span></button>
                         <button onclick="openStatsModalFromMenu()" class="w-full text-left px-3 py-2.5 bg-blue-500/10 text-blue-400 rounded-xl font-bold flex items-center space-x-3 border border-blue-500/20"><span>📊</span><span>View Users & Statistics</span></button>
                         <button onclick="openPartnerRequestsModalFromMenu()" class="w-full text-left px-3 py-2.5 bg-purple-500/10 text-purple-400 rounded-xl font-bold flex items-center space-x-3 border border-purple-500/20"><span>📋</span><span>Partner Requests</span></button>
+                        <!-- PAYMENT ACCEPT REQUESTS OPTION -->
+                        <button onclick="openPaymentAcceptModalFromMenu()" class="w-full text-left px-3 py-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl font-bold flex items-center space-x-3 border border-emerald-500/20"><span>💰</span><span>Payment Accept Requests</span></button>
                     </div>
                 </div>
             </div>
@@ -275,6 +277,20 @@
         </div>
     </div>
 
+    <!-- PAYMENT ACCEPT REQUESTS MODAL -->
+    <div id="paymentAcceptModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 text-left space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-bold text-emerald-400">💰 Payment Requests</h3>
+                <button onclick="closePaymentAcceptModal()" class="text-zinc-400 hover:text-white">✕</button>
+            </div>
+            <div id="paymentRequestsListContainer" class="space-y-3 max-h-60 overflow-y-auto text-xs">
+                <p class="text-zinc-500 text-center py-4">Loading requests...</p>
+            </div>
+            <button onclick="closePaymentAcceptModal()" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-slate-200 rounded-xl text-xs font-bold">Close</button>
+        </div>
+    </div>
+
     <!-- PRICING / MONTHLY & YEARLY & UPI PAYMENT MODAL -->
     <div id="paymentModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
@@ -300,7 +316,7 @@
                                 <span class="text-emerald-400 font-bold ml-1">₹35.00 / month</span>
                             </p>
                         </div>
-                        <button onclick="selectPlanAndPay('30GB_MONTHLY', 35)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                        <button onclick="selectPlanAndPay('30GB Monthly', 35, 30)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                     <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
                         <div>
@@ -310,7 +326,7 @@
                                 <span class="text-emerald-400 font-bold ml-1">₹70.00 / month</span>
                             </p>
                         </div>
-                        <button onclick="selectPlanAndPay('60GB_MONTHLY', 70)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                        <button onclick="selectPlanAndPay('60GB Monthly', 70, 60)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                     <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between relative">
                         <div>
@@ -320,7 +336,7 @@
                                 <span class="text-emerald-400 font-bold ml-1">₹122.50 / month</span>
                             </p>
                         </div>
-                        <button onclick="selectPlanAndPay('100GB_MONTHLY', 122.5)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                        <button onclick="selectPlanAndPay('100GB Monthly', 122.5, 100)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                 </div>
 
@@ -331,39 +347,47 @@
                             <p class="font-bold text-blue-400">30 GB Yearly</p>
                             <p class="text-[10px] text-zinc-400">₹1,200 / year</p>
                         </div>
-                        <button onclick="selectPlanAndPay('30GB_YEARLY', 1200)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                        <button onclick="selectPlanAndPay('30GB Yearly', 1200, 30)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                     <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
                         <div>
                             <p class="font-bold text-blue-400">60 GB Yearly</p>
                             <p class="text-[10px] text-zinc-400">₹2,400 / year</p>
                         </div>
-                        <button onclick="selectPlanAndPay('60GB_YEARLY', 2400)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                        <button onclick="selectPlanAndPay('60GB Yearly', 2400, 60)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                     <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
                         <div>
                             <p class="font-bold text-amber-400">100 GB Yearly</p>
                             <p class="text-[10px] text-zinc-400">₹4,200 / year</p>
                         </div>
-                        <button onclick="selectPlanAndPay('100GB_YEARLY', 4200)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                        <button onclick="selectPlanAndPay('100GB Yearly', 4200, 100)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
                     </div>
                 </div>
 
                 <button onclick="closePaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">Cancel</button>
             </div>
 
-            <!-- UPI QR & UNIQUE DECIMAL VIEW -->
-            <div id="upiQRView" class="hidden space-y-4">
+            <!-- UPI QR & SCREENSHOT UPLOAD VIEW -->
+            <div id="upiQRView" class="hidden space-y-3">
                 <h3 class="text-base font-bold">Scan & Pay Instantly</h3>
-                <div class="bg-white p-3 rounded-2xl inline-block">
-                    <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
+                <div class="bg-white p-2 rounded-2xl inline-block">
+                    <img id="upiQrImage" src="" alt="UPI QR Code" class="w-32 h-32 mx-auto">
                 </div>
-                <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
+                <div class="bg-zinc-950 p-2.5 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
                     <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span></p>
                     <p><strong>Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.25</span></p>
-                    <p><strong>Note/Serial Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
+                    <p><strong>Serial Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
                 </div>
-                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay</a>
+                <a id="upiIntentBtn" href="#" class="block w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay</a>
+                
+                <!-- UPLOAD SCREENSHOT SECTION -->
+                <div class="text-left space-y-1 text-xs pt-1">
+                    <label class="text-[10px] text-zinc-400 font-semibold block">Payment ke baad screenshot upload karein:</label>
+                    <input type="file" id="paymentScreenshotInput" accept="image/*" class="w-full text-[10px] text-zinc-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-emerald-600 file:text-black hover:file:bg-emerald-500 cursor-pointer">
+                </div>
+
+                <button onclick="submitPaymentScreenshot()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs transition shadow-lg">Send Screenshot to Sanjeev Thakur</button>
                 <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
             </div>
         </div>
@@ -385,7 +409,9 @@
 
     <script>
         const BACKEND_URL = "https://my-cloud-zeta.vercel.app";
-        let openedFromMenu = false; // Flag to track if modal was opened from drawer menu
+        let openedFromMenu = false;
+        let activePlanName = '';
+        let activeStorageGB = 0;
 
         function getUsersDB() {
             let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
@@ -616,12 +642,12 @@
                 document.getElementById('storageBar').style.width = "100%";
             } else if(userObj.role === "partner_owner" || userObj.role === "admin") {
                 document.getElementById('drawerEmail').innerText = email;
-                document.getElementById('drawerRole').innerText = userObj.role.toUpperCase() + " (Supreme Owner: vs4539876@gmail.com)";
+                document.getElementById('drawerRole').innerText = userObj.role.toUpperCase() + " (Supreme Owner: Sanjeev Thakur)";
                 document.getElementById('storageText').innerText = "Unlimited Storage";
                 document.getElementById('storageBar').style.width = "100%";
             } else {
                 document.getElementById('drawerEmail').innerText = email;
-                document.getElementById('drawerRole').innerText = "NORMAL USER (Supreme: vs4539876@gmail.com)";
+                document.getElementById('drawerRole').innerText = "NORMAL USER (Supreme: Sanjeev Thakur)";
                 document.getElementById('storageText').innerText = "50GB Free Storage";
                 document.getElementById('storageBar').style.width = "15%";
             }
@@ -771,49 +797,49 @@
             document.getElementById('partnerRequestsModal').classList.remove('hidden');
         }
 
+        function openPaymentAcceptModalFromMenu() {
+            toggleSidebar(false);
+            openedFromMenu = true;
+            loadPaymentRequests();
+            document.getElementById('paymentAcceptModal').classList.remove('hidden');
+        }
+
         function openPricingModalFromMenu() {
             toggleSidebar(false);
             openedFromMenu = true;
             openPricingModal();
         }
 
-        // --- DIRECT OPEN FUNCTIONS (From Dashboard Footer etc.) ---
+        // --- DIRECT OPEN FUNCTIONS ---
         function openPricingModalFromDirect() {
             openedFromMenu = false;
             openPricingModal();
         }
 
-        // --- CLOSE FUNCTIONS WITH STEP-BACK LOGIC ---
+        // --- CLOSE FUNCTIONS ---
         function closeAdminPanel() {
             document.getElementById('adminModal').classList.add('hidden');
-            if(openedFromMenu) {
-                toggleSidebar(true);
-                openedFromMenu = false;
-            }
+            if(openedFromMenu) { toggleSidebar(true); openedFromMenu = false; }
         }
 
         function closeStatsModal() {
             document.getElementById('statsModal').classList.add('hidden');
-            if(openedFromMenu) {
-                toggleSidebar(true);
-                openedFromMenu = false;
-            }
+            if(openedFromMenu) { toggleSidebar(true); openedFromMenu = false; }
         }
 
         function closePartnerRequestsModal() {
             document.getElementById('partnerRequestsModal').classList.add('hidden');
-            if(openedFromMenu) {
-                toggleSidebar(true);
-                openedFromMenu = false;
-            }
+            if(openedFromMenu) { toggleSidebar(true); openedFromMenu = false; }
+        }
+
+        function closePaymentAcceptModal() {
+            document.getElementById('paymentAcceptModal').classList.add('hidden');
+            if(openedFromMenu) { toggleSidebar(true); openedFromMenu = false; }
         }
 
         function closePaymentModal() { 
             document.getElementById('paymentModal').classList.add('hidden');
-            if(openedFromMenu) {
-                toggleSidebar(true);
-                openedFromMenu = false;
-            }
+            if(openedFromMenu) { toggleSidebar(true); openedFromMenu = false; }
         }
 
         function renderUsersAdminList(filter = "") {
@@ -883,6 +909,42 @@
             `;
         }
 
+        function loadPaymentRequests() {
+            fetch(`${BACKEND_URL}/api/admin/payment-requests`)
+            .then(res => res.json())
+            .then(data => {
+                let container = document.getElementById('paymentRequestsListContainer');
+                if(!data.requests || data.requests.length === 0) {
+                    container.innerHTML = `<p class="text-zinc-500 text-center py-4">No pending payment requests.</p>`;
+                    return;
+                }
+                container.innerHTML = "";
+                data.requests.forEach(req => {
+                    container.innerHTML += `
+                        <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 space-y-2">
+                            <p class="font-bold text-slate-200">User: @${req.username} (${req.email})</p>
+                            <p class="text-amber-400">Plan: ${req.planName} (${req.storageGB}GB)</p>
+                            <p class="text-zinc-400">Status: <span class="text-yellow-500 font-bold">${req.status}</span></p>
+                            ${req.status === 'Pending' ? `<button onclick="acceptPaymentRequest(${req.id})" class="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs">Accept & Start Membership</button>` : ''}
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function acceptPaymentRequest(requestId) {
+            fetch(`${BACKEND_URL}/api/admin/accept-payment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ requestId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                showCustomModal("Success", data.message);
+                loadPaymentRequests();
+            });
+        }
+
         function openPricingModal() {
             document.getElementById('planSelectionView').classList.remove('hidden');
             document.getElementById('upiQRView').classList.add('hidden');
@@ -894,11 +956,13 @@
             document.getElementById('upiQRView').classList.add('hidden');
         }
 
-        function selectPlanAndPay(planName, baseAmount) {
+        function selectPlanAndPay(planName, baseAmount, storageGB) {
+            activePlanName = planName;
+            activeStorageGB = storageGB;
             const finalAmount = (baseAmount + 0.25).toFixed(2);
             const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
 
-            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Sanjeev%20Thakur&am=${finalAmount}&tn=${refCode}&cu=INR`;
 
             document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
             document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
@@ -907,6 +971,45 @@
 
             document.getElementById('planSelectionView').classList.add('hidden');
             document.getElementById('upiQRView').classList.remove('hidden');
+        }
+
+        function submitPaymentScreenshot() {
+            let loggedInUser = sessionStorage.getItem('mycloud_logged_in');
+            let fileInput = document.getElementById('paymentScreenshotInput');
+
+            if(!loggedInUser) {
+                showCustomModal("Error", "Pehle login karein!");
+                return;
+            }
+
+            let reader = new FileReader();
+            if(fileInput.files && fileInput.files[0]) {
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = function () {
+                    sendRequestToServer(loggedInUser, reader.result);
+                };
+            } else {
+                sendRequestToServer(loggedInUser, null);
+            }
+        }
+
+        function sendRequestToServer(email, imgData) {
+            fetch(`${BACKEND_URL}/api/submit-payment-request`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: email.split('@')[0],
+                    email: email,
+                    planName: activePlanName,
+                    storageGB: activeStorageGB,
+                    screenshotData: imgData
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                showCustomModal("Success", "Payment request & screenshot successfully sent to Sanjeev Thakur!");
+                closePaymentModal();
+            });
         }
     </script>
 </body>
