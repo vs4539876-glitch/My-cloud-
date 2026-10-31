@@ -6,22 +6,19 @@ const path = require('path');
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 
-// Static files (HTML, CSS, JS) serve karne ke liye root folder ka path
 app.use(express.static(__dirname));
 
-// ⭐ Root URL par index.html file serve karne ka explicit route
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// In-memory databases
 let users = [
   {
     email: 'vs4539876@gmail.com',
-    name: 'Vipin Singh',
-    username: 'vipin_supreme',
+    name: 'Sanjeev Thakur',
+    username: 'sanjeev_supreme',
     password: 'password123',
     role: 'Supreme Owner',
     storageUsed: 12.5,
@@ -34,9 +31,8 @@ let users = [
 ];
 
 let otps = {};
-let partnerRequests = [];
+let paymentRequests = [];
 
-// Nodemailer Transporter Setup (Real 16-digit app password)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -60,10 +56,9 @@ app.post('/api/send-otp', async (req, res) => {
       subject: 'MyCloud Verification Code',
       text: `Your MyCloud verification code is: ${otp}`
     });
-    res.json({ success: true, message: 'OTP sent successfully to your email.' });
+    res.json({ success: true, message: 'OTP sent successfully.' });
   } catch (error) {
-    console.error('Mail Error:', error);
-    res.status(500).json({ success: false, message: 'Failed to send OTP. Check server configurations.' });
+    res.status(500).json({ success: false, message: 'Failed to send OTP.' });
   }
 });
 
@@ -113,70 +108,85 @@ app.post('/api/login', (req, res) => {
 app.post('/api/logout', (req, res) => {
   const { email } = req.body;
   const user = users.find(u => u.email === email);
-  if (user) {
-    user.status = 'Logged Out';
-  }
+  if (user) user.status = 'Logged Out';
   res.json({ success: true, message: 'Logged out successfully.' });
 });
 
-// Admin Stats & Users List
+// Submit Payment Screenshot & Request
+app.post('/api/submit-payment-request', async (req, res) => {
+  const { username, email, planName, storageGB, screenshotData } = req.body;
+
+  paymentRequests.push({
+    id: Date.now(),
+    username,
+    email,
+    planName,
+    storageGB,
+    status: 'Pending'
+  });
+
+  try {
+    await transporter.sendMail({
+      from: 'vs4539876@gmail.com',
+      to: 'vs4539876@gmail.com',
+      subject: `New Payment Screenshot from @${username}`,
+      text: `User @${username} (${email}) has submitted a payment screenshot for plan: ${planName} (${storageGB}GB). Please check your Supreme Owner panel to accept.`,
+      attachments: screenshotData ? [{ path: screenshotData }] : []
+    });
+    res.json({ success: true, message: 'Payment screenshot submitted successfully to Sanjeev Thakur!' });
+  } catch (error) {
+    console.error('Email error:', error);
+    res.json({ success: true, message: 'Request submitted successfully!' });
+  }
+});
+
+// Get Pending Payment Requests
+app.get('/api/admin/payment-requests', (req, res) => {
+  res.json({ success: true, requests: paymentRequests });
+});
+
+// Accept Payment Request & Start Membership
+app.post('/api/admin/accept-payment', (req, res) => {
+  const { requestId } = req.body;
+  const reqObj = paymentRequests.find(r => r.id === requestId);
+
+  if (!reqObj) return res.status(404).json({ success: false, message: 'Request nahi mili.' });
+
+  const targetUser = users.find(u => u.email === reqObj.email || u.username === reqObj.username);
+  if (targetUser) {
+    let newExpiry = new Date();
+    newExpiry.setDate(newExpiry.getDate() + 30);
+
+    targetUser.membershipType = reqObj.planName;
+    targetUser.storageLimit = reqObj.storageGB;
+    targetUser.expiryDate = newExpiry.toISOString();
+    targetUser.status = 'Active';
+  }
+
+  reqObj.status = 'Accepted';
+  res.json({ success: true, message: 'Membership successfully activated for the user!' });
+});
+
+// Admin Stats
 app.get('/api/admin/stats', (req, res) => {
   const now = new Date();
-  let newMembersCount = 0;
-  let oldMembersCount = 0;
-  let loggedOutCount = 0;
-  let adminCount = 0;
+  let newMembersCount = 0, oldMembersCount = 0, loggedOutCount = 0, adminCount = 0;
 
   users.forEach(u => {
     if (u.role === 'Admin' || u.role === 'Partner Owner') adminCount++;
     if (u.status === 'Logged Out') loggedOutCount++;
 
-    const diffTime = Math.abs(now - new Date(u.createdAt));
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 30) {
-      newMembersCount++;
-    } else {
-      oldMembersCount++;
-    }
+    const diffDays = Math.ceil(Math.abs(now - new Date(u.createdAt)) / (1000 * 60 * 60 * 24));
+    if (diffDays <= 30) newMembersCount++;
+    else oldMembersCount++;
   });
 
   res.json({
     success: true,
-    stats: {
-      totalUsers: users.length,
-      newMembers: newMembersCount,
-      oldMembers: oldMembersCount,
-      loggedOutMembers: loggedOutCount,
-      totalAdmins: adminCount
-    },
+    stats: { totalUsers: users.length, newMembers: newMembersCount, oldMembers: oldMembersCount, loggedOutMembers: loggedOutCount, totalAdmins: adminCount },
     users
   });
 });
 
-// ⭐ AUTOMATIC PAYMENT VERIFICATION & MEMBERSHIP ACTIVATION ROUTE
-app.post('/api/verify-payment', (req, res) => {
-  const { email, planType, storageGB } = req.body;
-  const user = users.find(u => u.email === email);
-
-  if (!user) {
-    return res.status(404).json({ success: false, message: 'User nahi mila.' });
-  }
-
-  // Automatic activate membership for 30 days & update storage limit
-  let newExpiry = new Date();
-  newExpiry.setDate(newExpiry.getDate() + 30);
-
-  user.membershipType = planType;
-  user.storageLimit = storageGB;
-  user.expiryDate = newExpiry.toISOString();
-  user.status = 'Active';
-
-  res.json({ 
-    success: true, 
-    message: 'Payment verified successfully! Membership activated.', 
-    user 
-  });
-});
-
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`MyCloud Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
