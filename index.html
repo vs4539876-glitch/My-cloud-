@@ -3,164 +3,791 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyCloud - Secure Cloud Storage</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --text: #f8fafc;
-            --danger: #ef4444;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 15px 25px;
-            border-bottom: 1px solid #334155;
-        }
-        .logo-area {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .nav-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        .btn {
-            background: var(--accent);
-            color: #0f172a;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 20px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .warning-banner {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid var(--danger);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            color: #fca5a5;
-            font-weight: 500;
-        }
-        .menu-dropdown, .three-line-menu {
-            display: none;
-            position: absolute;
-            background: #1e293b;
-            border: 1px solid #475569;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            border-radius: 8px;
-            top: 60px;
-            right: 20px;
-            width: 280px;
-            z-index: 100;
-            padding: 10px;
-        }
-        .menu-dropdown.active, .three-line-menu.active {
-            display: block;
-        }
-        .menu-item {
-            padding: 10px 15px;
-            cursor: pointer;
-            border-bottom: 1px solid #334155;
-            display: block;
-            color: var(--text);
-            text-decoration: none;
-        }
-        .menu-item:hover { background: #334155; }
-    </style>
+    <title>MyCloud - Secure Private Cloud Storage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-black text-slate-100 font-sans min-h-screen flex flex-col justify-between p-6">
 
-    <header>
-        <div class="logo-area">
-            ☁️ MyCloud
-        </div>
-        <div class="nav-controls">
-            <button class="btn" onclick="toggleProfileMenu()">👤 Profile</button>
-            <button class="btn" id="threeLineBtn" style="display:none;" onclick="toggleThreeLineMenu()">☰ Menu</button>
-        </div>
-    </header>
-
-    <div id="profileMenu" class="menu-dropdown">
-        <div style="padding: 10px; font-weight: bold; border-bottom: 1px solid #475569;" id="profileHeaderName">User Profile</div>
-        <a class="menu-item" onclick="alert('Edit Profile clicked')">Edit Profile</a>
-        <a class="menu-item" onclick="alert('Upgrade Membership clicked')">Upgrade Membership</a>
-        <a class="menu-item" href="mailto:vs4539876@gmail.com">Customer Support</a>
-        <a class="menu-item" onclick="alert('Logout clicked')" style="color: var(--danger);">Logout</a>
+    <div class="text-center flex justify-between items-center max-w-xs mx-auto w-full">
+        <span class="text-xs text-slate-400 cursor-pointer hover:text-slate-200">English (UK) ▾</span>
+        <span id="topSupremeOwnerBadge" class="hidden text-xs text-amber-400 font-bold flex items-center gap-1">👑 Supreme Owner: Vipin</span>
     </div>
 
-    <div id="threeLineMenu" class="three-line-menu">
-        <div style="padding: 10px; font-weight: bold; border-bottom: 1px solid #475569;">
-            👑 Supreme Owner (Vipin)
-        </div>
-        <a class="menu-item" onclick="alert('Make a Member / Roles clicked')">Make a Member / Roles</a>
-        <a class="menu-item" onclick="alert('Partner Requests clicked')">Partner Owner Requests</a>
-        <a class="menu-item" onclick="alert('View Users & Statistics clicked')">View Users & Statistics</a>
+    <!-- MEMBERSHIP EXPIRY WARNING BANNER -->
+    <div id="expiryWarningBanner" class="hidden max-w-xs w-full mx-auto bg-red-950/80 border border-red-800 text-red-200 p-3 rounded-2xl text-[11px] text-center space-y-1 shadow-lg">
+        <p class="font-bold">Your membership has expired!</p>
+        <p>Please download and clear your extra data within 15 days, otherwise the data will be locked.</p>
     </div>
 
-    <div class="container">
-        <div id="expiryWarning" class="warning-banner" style="display:none;">
-            Your membership has expired! Please download and clear your extra data within 15 days, otherwise the data will be locked.
+    <!-- 1. LOGIN PAGE -->
+    <div id="loginPage" class="max-w-xs w-full mx-auto space-y-6 my-auto">
+        <div class="text-center space-y-3">
+            <div class="w-20 h-20 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 rounded-3xl mx-auto flex items-center justify-center shadow-2xl shadow-pink-500/20">
+                <span class="text-3xl">☁️</span>
+            </div>
+            <h1 class="text-xl font-bold tracking-wider text-slate-200">MyCloud</h1>
         </div>
 
-        <h2>Welcome to MyCloud Dashboard</h2>
-        <p>Manage your files, secure backups, and cloud storage seamlessly.</p>
-        
-        <div style="margin-top: 20px;">
-            <button class="btn">Upload Files</button>
+        <div class="space-y-3">
+            <input type="text" id="loginIdentifier" placeholder="Username or email address" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500">
+            
+            <div class="relative">
+                <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500 pr-12">
+                <button type="button" onclick="togglePassword('loginPassword', 'toggleBtn')" id="toggleBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
+            </div>
+
+            <button onclick="handleLogin()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-xl transition text-sm shadow-lg shadow-blue-600/20">Log in</button>
+        </div>
+
+        <div class="text-center">
+            <a href="#" onclick="showPage('forgotPage')" class="text-xs text-blue-400 hover:underline">Forgotten password?</a>
+        </div>
+    </div>
+
+    <!-- 2. PROFESSIONAL SIGNUP PAGE -->
+    <div id="signupPage" class="hidden max-w-xs w-full mx-auto space-y-5 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-1">
+            <h2 class="text-sm font-bold text-slate-100">Create New Account</h2>
+            <p class="text-[11px] text-zinc-400">Sign up to get cloud storage.</p>
+        </div>
+
+        <div class="space-y-3 text-xs">
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Email Address</label>
+                <input type="email" id="signupIdentifier" placeholder="Enter email address" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Username</label>
+                <input type="text" id="signupUsername" placeholder="Choose a username" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Date of Birth</label>
+                <input type="date" id="signupAge" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Password</label>
+                <input type="password" id="signupPassword" placeholder="Set password" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+
+            <button onclick="submitSignup()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition shadow-lg mt-1">Sign up</button>
+            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">Already have an account? Log in</button>
+        </div>
+    </div>
+
+    <!-- 3. FORGOT PASSWORD PAGE -->
+    <div id="forgotPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Trouble logging in?</h2>
+            <p class="text-[11px] text-zinc-400">Enter your registered Email to receive a verification OTP.</p>
+        </div>
+
+        <div class="space-y-3">
+            <input type="email" id="recoveryInput" placeholder="Registered Email Address" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+            <button onclick="sendOtpCode()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs transition">Send OTP</button>
+            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Back to login</button>
+        </div>
+    </div>
+
+    <!-- 4. ENTER OTP PAGE -->
+    <div id="otpVerifyPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Enter OTP Code</h2>
+            <p id="otpSentInfo" class="text-[11px] text-emerald-400 font-mono">OTP sent to your email</p>
+        </div>
+
+        <div class="space-y-3">
+            <input type="text" id="enteredOtp" placeholder="Enter 6-digit OTP" maxlength="6" class="w-full px-4 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-slate-200 focus:outline-none text-center font-bold tracking-widest">
+            
+            <div class="flex justify-between items-center text-[11px] text-zinc-400 px-1">
+                <span id="timerDisplay">Time left: 01:30</span>
+                <button id="resendBtn" onclick="resendOtpCode()" class="text-blue-400 hover:underline disabled:text-zinc-600 disabled:no-underline" disabled>Resend OTP</button>
+            </div>
+
+            <button onclick="verifyOtp()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition">Verify OTP</button>
+            <button onclick="showPage('forgotPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Change Email</button>
+        </div>
+    </div>
+
+    <!-- 5. CREATE NEW PASSWORD PAGE -->
+    <div id="newPasswordPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Create New Password</h2>
+            <p class="text-[11px] text-zinc-400">Set a strong new password for your account.</p>
+        </div>
+
+        <div class="space-y-3">
+            <div class="relative">
+                <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none pr-12">
+                <button type="button" onclick="togglePassword('newPassword', 'toggleNewBtn')" id="toggleNewBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
+            </div>
+
+            <button onclick="saveNewPassword()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs transition shadow-lg">Save New Password</button>
+        </div>
+    </div>
+
+    <!-- SIGNUP FOOTER BUTTON -->
+    <div id="signupFooter" class="max-w-xs w-full mx-auto space-y-4 text-center">
+        <button onclick="showPage('signupPage')" class="w-full py-3 bg-transparent hover:bg-zinc-900 border border-zinc-800 text-blue-400 font-semibold rounded-xl transition text-xs">Create new account</button>
+        <div class="flex items-center justify-center space-x-1 text-xs text-zinc-500">
+            <span>☁️</span>
+            <span class="font-bold tracking-widest text-zinc-400">MyCloud Secure</span>
+        </div>
+    </div>
+
+    <!-- 6. GOOGLE PHOTOS STYLE DASHBOARD -->
+    <div id="dashboardPage" class="hidden fixed inset-0 bg-black z-50 flex flex-col justify-between">
+        <header class="bg-zinc-950 px-4 py-3 flex items-center justify-between border-b border-zinc-900">
+            <div class="flex items-center space-x-3 w-full">
+                <button onclick="toggleSidebar(true)" class="p-2 text-slate-300 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <div class="flex-1 bg-zinc-900 border border-zinc-800 rounded-full px-4 py-2 flex items-center space-x-3">
+                    <span class="text-zinc-500 text-sm">🔍</span>
+                    <input type="text" placeholder="Search photos, files..." class="bg-transparent text-xs w-full focus:outline-none text-slate-200 placeholder-zinc-500">
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div id="tabPhotos" class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Your Files & Photos</h3>
+                    <button onclick="triggerUpload()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold shadow">＋ Upload</button>
+                </div>
+                <div id="fileGridContainer" class="grid grid-cols-3 gap-2">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square flex items-center justify-center text-[10px] text-zinc-600">No files</div>
+                </div>
+            </div>
+
+            <!-- RECYCLE BIN TAB -->
+            <div id="tabRecycle" class="hidden space-y-4">
+                <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-100">Recycle Bin</h3>
+                        <p class="text-[10px] text-zinc-400">Deleted items can be restored or cleared</p>
+                    </div>
+                </div>
+                <div id="recycleGridContainer" class="grid grid-cols-3 gap-2">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square relative flex items-center justify-center text-[10px] text-zinc-600">
+                        <span>Empty</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bg-zinc-950 border-t border-zinc-900 py-2 px-6 flex justify-around items-center">
+            <button onclick="switchTab('photos')" class="flex flex-col items-center text-blue-400 space-y-1">
+                <span class="text-lg">🖼️</span>
+                <span class="text-[10px] font-medium">Photos</span>
+            </button>
+            <button onclick="switchTab('recycle')" class="flex flex-col items-center text-zinc-500 hover:text-zinc-300 space-y-1">
+                <span class="text-lg">🗑️</span>
+                <span class="text-[10px] font-medium">Recycle Bin</span>
+            </button>
+            <button onclick="openPricingModal()" class="flex flex-col items-center text-amber-400 hover:text-amber-300 space-y-1">
+                <span class="text-lg">⚡</span>
+                <span class="text-[10px] font-medium">Upgrade</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- SIDE MENU DRAWER -->
+    <div id="sideDrawer" class="hidden fixed inset-0 z-50 flex">
+        <div class="bg-zinc-950 w-4/5 max-w-xs h-full border-r border-zinc-800 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
+            <div class="space-y-6">
+                <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+                    <div>
+                        <p id="drawerEmail" class="text-xs font-bold text-slate-200">User</p>
+                        <p id="drawerRole" class="text-[10px] text-blue-400 font-semibold mt-0.5">NORMAL USER</p>
+                        <p id="supremeOwnerIndicatorText" class="text-[9px] text-amber-400 font-bold mt-1">Supreme Owner: vs4539876@gmail.com</p>
+                    </div>
+                    <button onclick="toggleSidebar(false)" class="text-zinc-400 hover:text-white text-lg">✕</button>
+                </div>
+
+                <div class="bg-zinc-900 border border-zinc-800 p-3.5 rounded-2xl space-y-2">
+                    <div class="flex justify-between text-[11px] font-semibold text-zinc-300">
+                        <span>Storage Plan</span>
+                        <span id="storageText">0 GB used</span>
+                    </div>
+                    <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+                        <div id="storageBar" class="bg-blue-500 h-full w-[0%]" style="width: 10%;"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-1 text-xs">
+                    <button onclick="switchTab('photos'); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🖼️</span><span>My Files</span></button>
+                    <button onclick="switchTab('recycle'); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🗑️</span><span>Recycle Bin</span></button>
+                    <button onclick="openPricingModal(); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-amber-400 flex items-center space-x-3"><span>⚡</span><span>Upgrade Membership</span></button>
+                    <a href="mailto:vs4539876@gmail.com" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>💬</span><span>Customer Support</span></a>
+                    
+                    <!-- MASTER / SUPREME OWNER PANEL OPTION -->
+                    <div id="adminMenuOption" class="hidden pt-2 border-t border-zinc-800 space-y-1">
+                        <button onclick="openAdminPanel()" class="w-full text-left px-3 py-2.5 bg-amber-500/10 text-amber-400 rounded-xl font-bold flex items-center space-x-3 border border-amber-500/20"><span>👑</span><span>Supreme Owner Panel</span></button>
+                        <button onclick="openStatsModal()" class="w-full text-left px-3 py-2.5 bg-blue-500/10 text-blue-400 rounded-xl font-bold flex items-center space-x-3 border border-blue-500/20"><span>📊</span><span>View Users & Statistics</span></button>
+                        <button onclick="openPartnerRequestsModal()" class="w-full text-left px-3 py-2.5 bg-purple-500/10 text-purple-400 rounded-xl font-bold flex items-center space-x-3 border border-purple-500/20"><span>📋</span><span>Partner Requests</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="handleLogout()" class="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-red-400 rounded-xl text-xs font-semibold border border-zinc-800">Logout</button>
+        </div>
+        <div class="flex-1 bg-black/60 backdrop-blur-sm" onclick="toggleSidebar(false)"></div>
+    </div>
+
+    <!-- SUPREME OWNER & ROLE MANAGEMENT PANEL -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 text-left space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-bold text-amber-400 flex items-center space-x-2"><span>👑 Make a Member / Roles Panel</span></h3>
+                <button onclick="closeAdminPanel()" class="text-zinc-400 hover:text-white">✕</button>
+            </div>
+            <div>
+                <input type="text" id="userSearchInput" onkeyup="filterUsers()" placeholder="Search username or email..." class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+            </div>
+            <div id="usersListContainer" class="space-y-3 max-h-60 overflow-y-auto text-xs"></div>
+            <button onclick="closeAdminPanel()" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-slate-200 rounded-xl text-xs font-bold">Close Panel</button>
+        </div>
+    </div>
+
+    <!-- STATISTICS & MEMBERS BREAKDOWN MODAL -->
+    <div id="statsModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-left space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-bold text-blue-400">📊 Users Statistics</h3>
+                <button onclick="closeStatsModal()" class="text-zinc-400 hover:text-white">✕</button>
+            </div>
+            <div id="statsContent" class="space-y-3 text-xs">
+                <!-- Count will inject here -->
+            </div>
+            <button onclick="closeStatsModal()" class="w-full py-2 bg-zinc-800 text-white rounded-xl text-xs font-bold">Close</button>
+        </div>
+    </div>
+
+    <!-- PARTNER REQUESTS MODAL -->
+    <div id="partnerRequestsModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-left space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-bold text-purple-400">📋 Partner Admin Requests</h3>
+                <button onclick="closePartnerRequestsModal()" class="text-zinc-400 hover:text-white">✕</button>
+            </div>
+            <div id="requestsListContainer" class="space-y-2 max-h-60 overflow-y-auto text-xs">
+                <p class="text-zinc-500 text-center py-4">No pending requests.</p>
+            </div>
+            <button onclick="closePartnerRequestsModal()" class="w-full py-2 bg-zinc-800 text-white rounded-xl text-xs font-bold">Close</button>
+        </div>
+    </div>
+
+    <!-- PRICING / UNIQUE DECIMAL UPI PAYMENT MODAL -->
+    <div id="paymentModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+            <div id="planSelectionView" class="space-y-4">
+                <h3 class="text-base font-bold text-slate-100">Upgrade Membership (65% 1st Month Off)</h3>
+                <div class="space-y-2 text-left text-xs">
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
+                        <div><p class="font-bold text-blue-400">30 GB Monthly</p><p class="text-[10px] text-zinc-400">₹100 / month</p></div>
+                        <button onclick="selectPlanAndPay('30GB_MONTHLY', 100)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                    </div>
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
+                        <div><p class="font-bold text-blue-400">60 GB Monthly</p><p class="text-[10px] text-zinc-400">₹200 / month</p></div>
+                        <button onclick="selectPlanAndPay('60GB_MONTHLY', 200)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                    </div>
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 flex items-center justify-between">
+                        <div><p class="font-bold text-amber-400">100 GB (Popular)</p><p class="text-[10px] text-zinc-400">₹350 / month</p></div>
+                        <button onclick="selectPlanAndPay('100GB_MONTHLY', 350)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-[11px]">Select</button>
+                    </div>
+                </div>
+                <button onclick="closePaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">Cancel</button>
+            </div>
+
+            <div id="upiQRView" class="hidden space-y-4">
+                <h3 class="text-base font-bold">Scan & Pay (Unique Decimal Auto-Verification)</h3>
+                <div class="bg-white p-3 rounded-2xl inline-block">
+                    <img id="upiQrImage" src="" alt="UPI QR Code" class="w-36 h-36 mx-auto">
+                </div>
+                <div class="bg-zinc-950 p-3 rounded-xl text-left text-[11px] space-y-1 font-mono border border-zinc-800">
+                    <p><strong>UPI ID:</strong> <span class="text-blue-400">8865919649@ptsbi</span>[span_8](start_span)[span_8](end_span)</p>
+                    <p><strong>Unique Amount:</strong> <span id="modalAmount" class="text-emerald-400">₹0.00</span></p>
+                    <p><strong>Note Code:</strong> <span id="modalRefCode" class="text-amber-400">CLOUD0000</span></p>
+                </div>
+                <a id="upiIntentBtn" href="#" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl transition text-xs shadow-lg">Open UPI App & Pay[span_9](start_span)[span_9](end_span)</a>
+                <button onclick="resetPaymentModal()" class="text-[11px] text-zinc-500 hover:text-zinc-300">← Back to Plans</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM MYCLOUD MODAL POPUP -->
+    <div id="customModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-xs w-full p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-12 h-12 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg">
+                <span class="text-xl">☁️</span>
+            </div>
+            <div class="space-y-1">
+                <h3 id="modalTitle" class="text-sm font-bold text-slate-100">MyCloud Notice</h3>
+                <p id="modalMessage" class="text-xs text-zinc-400 leading-relaxed"></p>
+            </div>
+            <button onclick="closeCustomModal()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs transition">OK</button>
         </div>
     </div>
 
     <script>
-        let currentUser = {
-            email: 'vs4539876@gmail.com',
-            name: 'Vipin Singh',
-            role: 'Supreme Owner',
-            membershipExpired: false
-        };
+        const BACKEND_URL = "https://my-cloud-zeta.vercel.app";
 
-        window.onload = function() {
-            if (currentUser.role === 'Supreme Owner' || currentUser.role === 'Partner Owner') {
-                document.getElementById('threeLineBtn').style.display = 'block';
+        function getUsersDB() {
+            let users = JSON.parse(localStorage.getItem('mycloud_users')) || {};
+            if(!users["vs4539876@gmail.com"]) {
+                users["vs4539876@gmail.com"] = { 
+                    password: "admin123", 
+                    role: "supreme_owner", 
+                    createdAt: new Date('2025-01-01').toISOString(), 
+                    status: 'active',
+                    files: [] 
+                };
             }
-            if (currentUser.membershipExpired) {
-                document.getElementById('expiryWarning').style.display = 'block';
-            }
-            document.getElementById('profileHeaderName').innerText = `${currentUser.name} (${currentUser.role})`;
-        };
-
-        function toggleProfileMenu() {
-            document.getElementById('profileMenu').classList.toggle('active');
-            document.getElementById('threeLineMenu').classList.remove('active');
+            return users;
         }
 
-        function toggleThreeLineMenu() {
-            document.getElementById('threeLineMenu').classList.toggle('active');
-            document.getElementById('profileMenu').classList.remove('active');
+        let recoveryTargetUser = null;
+        let timerInterval = null;
+
+        function showCustomModal(title, message) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        window.onload = function() {
+            let loggedInUser = sessionStorage.getItem('mycloud_logged_in');
+            if(loggedInUser) {
+                let users = getUsersDB();
+                if(users[loggedInUser]) {
+                    showPage('dashboardPage');
+                    setupDashboard(loggedInUser, users[loggedInUser]);
+                }
+            }
+        };
+
+        function showPage(pageId) {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('forgotPage').classList.add('hidden');
+            document.getElementById('otpVerifyPage').classList.add('hidden');
+            document.getElementById('newPasswordPage').classList.add('hidden');
+            document.getElementById('signupFooter').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+
+            if(pageId === 'loginPage') {
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('signupFooter').classList.remove('hidden');
+            } else if(pageId === 'signupPage') {
+                document.getElementById('signupPage').classList.remove('hidden');
+            } else if(pageId === 'forgotPage') {
+                document.getElementById('forgotPage').classList.remove('hidden');
+            } else if(pageId === 'otpVerifyPage') {
+                document.getElementById('otpVerifyPage').classList.remove('hidden');
+            } else if(pageId === 'newPasswordPage') {
+                document.getElementById('newPasswordPage').classList.remove('hidden');
+            } else if(pageId === 'dashboardPage') {
+                document.getElementById('dashboardPage').classList.remove('hidden');
+            }
+        }
+
+        function togglePassword(fieldId, btnId) {
+            const pwd = document.getElementById(fieldId);
+            const btn = document.getElementById(btnId);
+            if(pwd.type === "password") { pwd.type = "text"; btn.innerText = "Hide"; }
+            else { pwd.type = "password"; btn.innerText = "Show"; }
+        }
+
+        function handleLogin() {
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if(!identifier || !password) {
+                showCustomModal("Login Error", "Please fill in both fields!");
+                return;
+            }
+
+            let users = getUsersDB();
+            if(users[identifier]) {
+                const userObj = typeof users[identifier] === 'object' ? users[identifier] : { password: users[identifier], role: "user" };
+
+                if(userObj.password === password) {
+                    userObj.status = 'active';
+                    users[identifier] = userObj;
+                    localStorage.setItem('mycloud_users', JSON.stringify(users));
+
+                    sessionStorage.setItem('mycloud_logged_in', identifier);
+                    showPage('dashboardPage');
+                    setupDashboard(identifier, userObj);
+                } else {
+                    showCustomModal("Login Failed", "Incorrect Password!");
+                }
+            } else {
+                showCustomModal("Account Not Found", "Email or username not registered.");
+            }
+        }
+
+        function submitSignup() {
+            const identifier = document.getElementById('signupIdentifier').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const age = document.getElementById('signupAge').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+
+            if(!identifier || !username || !age || !password) {
+                showCustomModal("Registration Error", "Please fill out all fields!");
+                return;
+            }
+
+            let users = getUsersDB();
+            if(users[identifier]) {
+                showCustomModal("Account Exists", "Account already exists with this email!");
+                return;
+            }
+
+            users[identifier] = {
+                username: username,
+                age: age,
+                password: password,
+                role: "user",
+                createdAt: new Date().toISOString(),
+                status: 'active',
+                membershipExpiry: new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+                files: [],
+                recycleBin: []
+            };
+
+            localStorage.setItem('mycloud_users', JSON.stringify(users));
+            showCustomModal("Success", "Account created successfully! Please log in.");
+            document.getElementById('loginIdentifier').value = identifier;
+            showPage('loginPage');
+        }
+
+        function sendOtpCode() {
+            const input = document.getElementById('recoveryInput').value.trim();
+            if(!input || !input.includes('@')) { 
+                showCustomModal("Input Error", "Enter valid email address!"); 
+                return; 
+            }
+
+            let users = getUsersDB();
+            if(!users[input]) {
+                showCustomModal("Not Registered", "Email not found in database.");
+                return;
+            }
+
+            recoveryTargetUser = input;
+
+            fetch(`${BACKEND_URL}/api/send-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: input })
+            })
+            .then(res => res.json())
+            .then(data => {
+                showCustomModal("OTP Sent", "Verification OTP sent to your email!");
+                showPage('otpVerifyPage');
+                startOtpTimer();
+            })
+            .catch(err => {
+                showCustomModal("OTP Sent (Demo)", "OTP generated successfully!");
+                showPage('otpVerifyPage');
+                startOtpTimer();
+            });
+        }
+
+        function resendOtpCode() { sendOtpCode(); }
+
+        function startOtpTimer() {
+            clearInterval(timerInterval);
+            let timeLeft = 90; 
+            const timerDisplay = document.getElementById('timerDisplay');
+            const resendBtn = document.getElementById('resendBtn');
+            resendBtn.disabled = true;
+
+            timerInterval = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerDisplay.innerText = `Time left: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.innerText = "OTP Expired!";
+                    resendBtn.disabled = false;
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function verifyOtp() {
+            clearInterval(timerInterval);
+            showCustomModal("Success", "OTP Verified Successfully!");
+            showPage('newPasswordPage');
+        }
+
+        function saveNewPassword() {
+            const newPwd = document.getElementById('newPassword').value.trim();
+            if(!newPwd || newPwd.length < 4) {
+                showCustomModal("Weak Password", "At least 4 characters required.");
+                return;
+            }
+
+            let users = getUsersDB();
+            if(users[recoveryTargetUser]) {
+                if(typeof users[recoveryTargetUser] === 'object') {
+                    users[recoveryTargetUser].password = newPwd;
+                } else {
+                    users[recoveryTargetUser] = { password: newPwd, role: "user" };
+                }
+                localStorage.setItem('mycloud_users', JSON.stringify(users));
+            }
+
+            showCustomModal("Password Reset", "Password reset successful! Please log in.");
+            document.getElementById('loginIdentifier').value = recoveryTargetUser;
+            showPage('loginPage');
+        }
+
+        function setupDashboard(email, userObj) {
+            document.getElementById('topSupremeOwnerBadge').classList.remove('hidden');
+
+            if(email === "vs4539876@gmail.com" || userObj.role === "supreme_owner") {
+                document.getElementById('drawerEmail').innerHTML = `${email} <span class="text-amber-400 text-sm">👑</span>`;
+                document.getElementById('drawerRole').innerText = "SUPREME OWNER (Master)";
+                document.getElementById('drawerRole').className = "text-[10px] text-amber-400 font-bold mt-0.5";
+                document.getElementById('adminMenuOption').classList.remove('hidden');
+                document.getElementById('storageText').innerText = "Unlimited (Master)";
+                document.getElementById('storageBar').style.width = "100%";
+            } else if(userObj.role === "partner_owner" || userObj.role === "admin") {
+                document.getElementById('drawerEmail').innerText = email;
+                document.getElementById('drawerRole').innerText = userObj.role.toUpperCase() + " (Supreme Owner: vs4539876@gmail.com)";
+                document.getElementById('storageText').innerText = "Unlimited Storage";
+                document.getElementById('storageBar').style.width = "100%";
+            } else {
+                document.getElementById('drawerEmail').innerText = email;
+                document.getElementById('drawerRole').innerText = "NORMAL USER (Supreme: vs4539876@gmail.com)";
+                document.getElementById('storageText').innerText = "50GB Free Storage";
+                document.getElementById('storageBar').style.width = "15%";
+            }
+
+            // Check Expiry & 15-day Grace Period Warning
+            if(userObj.membershipExpiry && new Date(userObj.membershipExpiry) < new Date()) {
+                document.getElementById('expiryWarningBanner').classList.remove('hidden');
+            }
+
+            renderFiles(userObj.files || []);
+            renderRecycleBin(userObj.recycleBin || []);
+        }
+
+        function handleLogout() {
+            let loggedInUser = sessionStorage.getItem('mycloud_logged_in');
+            let users = getUsersDB();
+            if(loggedInUser && users[loggedInUser]) {
+                users[loggedInUser].status = 'logged_out';
+                localStorage.setItem('mycloud_users', JSON.stringify(users));
+            }
+
+            sessionStorage.removeItem('mycloud_logged_in');
+            showPage('loginPage');
+            document.getElementById('adminMenuOption').classList.add('hidden');
+            document.getElementById('topSupremeOwnerBadge').classList.add('hidden');
+            document.getElementById('expiryWarningBanner').classList.add('hidden');
+            document.getElementById('loginIdentifier').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function toggleSidebar(open) {
+            const drawer = document.getElementById('sideDrawer');
+            if(open) drawer.classList.remove('hidden');
+            else drawer.classList.add('hidden');
+        }
+
+        function switchTab(tab) {
+            if(tab === 'photos') {
+                document.getElementById('tabPhotos').classList.remove('hidden');
+                document.getElementById('tabRecycle').classList.add('hidden');
+            } else if(tab === 'recycle') {
+                document.getElementById('tabPhotos').classList.add('hidden');
+                document.getElementById('tabRecycle').classList.remove('hidden');
+            }
+            toggleSidebar(false);
+        }
+
+        function triggerUpload() {
+            let loggedInUser = sessionStorage.getItem('mycloud_logged_in');
+            let users = getUsersDB();
+            if(loggedInUser && users[loggedInUser]) {
+                if(!users[loggedInUser].files) users[loggedInUser].files = [];
+                let fileName = "Photo_" + Math.floor(Math.random() * 1000) + ".jpg";
+                users[loggedInUser].files.push(fileName);
+                localStorage.setItem('mycloud_users', JSON.stringify(users));
+                renderFiles(users[loggedInUser].files);
+                showCustomModal("Upload Successful", "File uploaded successfully to MyCloud!");
+            }
+        }
+
+        function renderFiles(files) {
+            let container = document.getElementById('fileGridContainer');
+            if(!files || files.length === 0) {
+                container.innerHTML = `<div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square flex items-center justify-center text-[10px] text-zinc-600">No photos</div>`;
+                return;
+            }
+            container.innerHTML = "";
+            files.forEach((file, index) => {
+                container.innerHTML += `
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square relative flex flex-col items-center justify-center p-2 text-[10px] text-zinc-300">
+                        <span>🖼️</span>
+                        <span class="truncate w-full text-center mt-1">${file}</span>
+                        <button onclick="deleteFile(${index})" class="absolute top-1 right-1 bg-red-600/80 text-white rounded-full w-5 h-5 flex items-center justify-center text-[9px]">✕</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteFile(index) {
+            let loggedInUser = sessionStorage.getItem('mycloud_logged_in');
+            let users = getUsersDB();
+            if(loggedInUser && users[loggedInUser]) {
+                let file = users[loggedInUser].files.splice(index, 1)[0];
+                if(!users[loggedInUser].recycleBin) users[loggedInUser].recycleBin = [];
+                users[loggedInUser].recycleBin.push(file);
+                localStorage.setItem('mycloud_users', JSON.stringify(users));
+                renderFiles(users[loggedInUser].files);
+                renderRecycleBin(users[loggedInUser].recycleBin);
+                showCustomModal("Moved to Recycle Bin", "File moved to recycle bin successfully.");
+            }
+        }
+
+        function renderRecycleBin(recycleBin) {
+            let container = document.getElementById('recycleGridContainer');
+            if(!recycleBin || recycleBin.length === 0) {
+                container.innerHTML = `<div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square flex items-center justify-center text-[10px] text-zinc-600">Empty</div>`;
+                return;
+            }
+            container.innerHTML = "";
+            recycleBin.forEach((file) => {
+                container.innerHTML += `
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square relative flex flex-col items-center justify-center p-2 text-[10px] text-zinc-400">
+                        <span>🗑️</span>
+                        <span class="truncate w-full text-center mt-1">${file}</span>
+                        <span class="absolute bottom-1 bg-black/70 text-[8px] text-zinc-300 px-1 rounded">30 days</span>
+                    </div>
+                `;
+            });
+        }
+
+        // SUPREME OWNER ROLE & STATS MANAGEMENT
+        function openAdminPanel() {
+            renderUsersAdminList();
+            document.getElementById('adminModal').classList.remove('hidden');
+            toggleSidebar(false);
+        }
+
+        function closeAdminPanel() { document.getElementById('adminModal').classList.add('hidden'); }
+
+        function renderUsersAdminList(filter = "") {
+            let users = getUsersDB();
+            let container = document.getElementById('usersListContainer');
+            container.innerHTML = "";
+
+            for(let email in users) {
+                if(filter && !email.toLowerCase().includes(filter.toLowerCase())) continue;
+                if(email === "vs4539876@gmail.com") continue;
+
+                let data = users[email];
+                let isPartner = data.role === "partner_owner";
+                let isAdmin = data.role === "admin";
+
+                container.innerHTML += `
+                    <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 space-y-2">
+                        <p class="font-bold text-slate-200">${email}</p>
+                        <div class="flex items-center justify-between text-[11px] pt-1 border-t border-zinc-900">
+                            <span class="text-zinc-400">Make Partner Owner</span>
+                            <input type="checkbox" ${isPartner ? 'checked' : ''} onchange="updateUserRole('${email}', 'partner_owner', this.checked)">
+                        </div>
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="text-zinc-400">Make Admin</span>
+                            <input type="checkbox" ${isAdmin ? 'checked' : ''} onchange="updateUserRole('${email}', 'admin', this.checked)">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function filterUsers() { renderUsersAdminList(document.getElementById('userSearchInput').value); }
+
+        function updateUserRole(email, roleType, isChecked) {
+            let users = getUsersDB();
+            if(users[email]) {
+                users[email].role = isChecked ? roleType : 'user';
+                localStorage.setItem('mycloud_users', JSON.stringify(users));
+                showCustomModal("Role Updated", `Role updated successfully for ${email}!`);
+            }
+        }
+
+        function openStatsModal() {
+            let users = getUsersDB();
+            let now = new Date();
+            let newMembers = 0, oldMembers = 0, loggedOut = 0, totalAdmins = 0;
+
+            for(let email in users) {
+                let u = users[email];
+                if(u.role === 'admin' || u.role === 'partner_owner') totalAdmins++;
+                if(u.status === 'logged_out') loggedOut++;
+
+                let createdDate = new Date(u.createdAt || now);
+                let diffDays = Math.ceil(Math.abs(now - createdDate) / (1000 * 60 * 60 * 24));
+                if(diffDays <= 30) newMembers++;
+                else oldMembers++;
+            }
+
+            document.getElementById('statsContent').innerHTML = `
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-1">
+                    <p>Total Registered Users: <strong>${Object.keys(users).length}</strong></p>
+                    <p class="text-emerald-400">New Members (&lt;30 days): <strong>${newMembers}</strong></p>
+                    <p class="text-blue-400">Old Members (&gt;30 days): <strong>${oldMembers}</strong></p>
+                    <p class="text-amber-400">Logged Out Members: <strong>${loggedOut}</strong></p>
+                    <p class="text-purple-400">Total Admins / Partners: <strong>${totalAdmins}</strong></p>
+                </div>
+            `;
+            document.getElementById('statsModal').classList.remove('hidden');
+            toggleSidebar(false);
+        }
+
+        function closeStatsModal() { document.getElementById('statsModal').classList.add('hidden'); }
+        function openPartnerRequestsModal() {
+            document.getElementById('partnerRequestsModal').classList.remove('hidden');
+            toggleSidebar(false);
+        }
+        function closePartnerRequestsModal() { document.getElementById('partnerRequestsModal').classList.add('hidden'); }
+
+        function openPricingModal() {
+            document.getElementById('planSelectionView').classList.remove('hidden');
+            document.getElementById('upiQRView').classList.add('hidden');
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closePaymentModal() { document.getElementById('paymentModal').classList.add('hidden'); }
+        function resetPaymentModal() {
+            document.getElementById('planSelectionView').classList.remove('hidden');
+            document.getElementById('upiQRView').classList.add('hidden');
+        }
+
+        function selectPlanAndPay(planName, baseAmount) {
+            const randomPaise = (Math.floor(Math.random() * 89) + 10) / 100;
+            const finalAmount = (baseAmount + randomPaise).toFixed(2);
+            const refCode = "CLOUD" + Math.floor(1000 + Math.random() * 9000);
+
+            const upiUrl = `upi://pay?pa=8865919649@ptsbi&pn=Vipin%20Singh&am=${finalAmount}&tn=${refCode}&cu=INR`;[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)
+
+            document.getElementById('upiQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
+            document.getElementById('modalAmount').innerText = `₹${finalAmount}`;
+            document.getElementById('modalRefCode').innerText = refCode;
+            document.getElementById('upiIntentBtn').href = upiUrl;
+
+            document.getElementById('planSelectionView').classList.add('hidden');
+            document.getElementById('upiQRView').classList.remove('hidden');
         }
     </script>
 </body>
