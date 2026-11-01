@@ -1,3 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCloud - Secure Private Cloud Storage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-slate-100 font-sans min-h-screen flex flex-col justify-between p-6">
+
+    <div class="text-center flex justify-between items-center max-w-xs mx-auto w-full">
+        <span class="text-xs text-slate-400 cursor-pointer hover:text-slate-200">English (UK) ▾</span>
+        <span id="topSupremeOwnerBadge" class="hidden text-xs text-amber-400 font-bold flex items-center gap-1">👑 Supreme Owner: Sanjeev Thakur</span>
+    </div>
+
+    <!-- MEMBERSHIP EXPIRY WARNING BANNER -->
+    <div id="expiryWarningBanner" class="hidden max-w-xs w-full mx-auto bg-red-950/80 border border-red-800 text-red-200 p-3 rounded-2xl text-[11px] text-center space-y-1 shadow-lg">
+        <p class="font-bold">Your membership has expired!</p>
+        <p>Please download and clear your extra data within 15 days, otherwise the data will be locked.</p>
+    </div>
+
+    <!-- 1. LOGIN PAGE -->
+    <div id="loginPage" class="max-w-xs w-full mx-auto space-y-6 my-auto">
+        <div class="text-center space-y-3">
+            <div class="w-20 h-20 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 rounded-3xl mx-auto flex items-center justify-center shadow-2xl shadow-pink-500/20">
+                <span class="text-3xl">☁️</span>
+            </div>
+            <h1 class="text-xl font-bold tracking-wider text-slate-200">MyCloud</h1>
+        </div>
+
+        <div class="space-y-3">
+            <input type="text" id="loginIdentifier" placeholder="Username or email address" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500">
+            
+            <div class="relative">
+                <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3.5 bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-xs text-slate-200 placeholder-zinc-500 pr-12">
+                <button type="button" onclick="togglePassword('loginPassword', 'toggleBtn')" id="toggleBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
+            </div>
+
+            <button onclick="handleLogin()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-xl transition text-sm shadow-lg shadow-blue-600/20">Log in</button>
+        </div>
+
+        <div class="text-center">
+            <a href="#" onclick="showPage('forgotPage')" class="text-xs text-blue-400 hover:underline">Forgotten password?</a>
+        </div>
+    </div>
+
+    <!-- 2. PROFESSIONAL SIGNUP PAGE -->
+    <div id="signupPage" class="hidden max-w-xs w-full mx-auto space-y-5 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-1">
+            <h2 class="text-sm font-bold text-slate-100">Create New Account</h2>
+            <p class="text-[11px] text-zinc-400">Sign up to get cloud storage.</p>
+        </div>
+
+        <div class="space-y-3 text-xs">
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Email Address</label>
+                <input type="email" id="signupIdentifier" placeholder="Enter email address" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Username</label>
+                <input type="text" id="signupUsername" placeholder="Choose a username" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Date of Birth</label>
+                <input type="date" id="signupAge" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1 font-semibold">Password</label>
+                <input type="password" id="signupPassword" placeholder="Set password" class="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-slate-200 focus:outline-none">
+            </div>
+
+            <button onclick="submitSignup()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition shadow-lg mt-1">Sign up</button>
+            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">Already have an account? Log in</button>
+        </div>
+    </div>
+
+    <!-- 3. FORGOT PASSWORD PAGE -->
+    <div id="forgotPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Trouble logging in?</h2>
+            <p class="text-[11px] text-zinc-400">Enter your registered Email to receive a verification OTP.</p>
+        </div>
+
+        <div class="space-y-3">
+            <input type="email" id="recoveryInput" placeholder="Registered Email Address" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+            <button onclick="sendOtpCode()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs transition">Send OTP</button>
+            <button onclick="showPage('loginPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Back to login</button>
+        </div>
+    </div>
+
+    <!-- 4. ENTER OTP PAGE -->
+    <div id="otpVerifyPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Enter OTP Code</h2>
+            <p id="otpSentInfo" class="text-[11px] text-emerald-400 font-mono">OTP sent to your email</p>
+        </div>
+
+        <div class="space-y-3">
+            <input type="text" id="enteredOtp" placeholder="Enter 6-digit OTP" maxlength="6" class="w-full px-4 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-slate-200 focus:outline-none text-center font-bold tracking-widest">
+            
+            <div class="flex justify-between items-center text-[11px] text-zinc-400 px-1">
+                <span id="timerDisplay">Time left: 01:30</span>
+                <button id="resendBtn" onclick="resendOtpCode()" class="text-blue-400 hover:underline disabled:text-zinc-600 disabled:no-underline" disabled>Resend OTP</button>
+            </div>
+
+            <button onclick="verifyOtp()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition">Verify OTP</button>
+            <button onclick="showPage('forgotPage')" class="w-full py-2 bg-transparent text-zinc-400 hover:text-white text-xs">← Change Email</button>
+        </div>
+    </div>
+
+    <!-- 5. CREATE NEW PASSWORD PAGE -->
+    <div id="newPasswordPage" class="hidden max-w-xs w-full mx-auto space-y-6 my-auto bg-zinc-900 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div class="text-center space-y-2">
+            <h2 class="text-sm font-bold text-slate-100">Create New Password</h2>
+            <p class="text-[11px] text-zinc-400">Set a strong new password for your account.</p>
+        </div>
+
+        <div class="space-y-3">
+            <div class="relative">
+                <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none pr-12">
+                <button type="button" onclick="togglePassword('newPassword', 'toggleNewBtn')" id="toggleNewBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-white">Show</button>
+            </div>
+
+            <button onclick="saveNewPassword()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-bold rounded-xl text-xs transition shadow-lg">Save New Password</button>
+        </div>
+    </div>
+
+    <!-- SIGNUP FOOTER BUTTON -->
+    <div id="signupFooter" class="max-w-xs w-full mx-auto space-y-4 text-center">
+        <button onclick="showPage('signupPage')" class="w-full py-3 bg-transparent hover:bg-zinc-900 border border-zinc-800 text-blue-400 font-semibold rounded-xl transition text-xs">Create new account</button>
+        <div class="flex items-center justify-center space-x-1 text-xs text-zinc-500">
+            <span>☁️</span>
+            <span class="font-bold tracking-widest text-zinc-400">MyCloud Secure</span>
+        </div>
+    </div>
+
+    <!-- 6. GOOGLE PHOTOS STYLE DASHBOARD -->
+    <div id="dashboardPage" class="hidden fixed inset-0 bg-black z-50 flex flex-col justify-between">
+        <header class="bg-zinc-950 px-4 py-3 flex items-center justify-between border-b border-zinc-900">
+            <div class="flex items-center space-x-3 w-full">
+                <button onclick="toggleSidebar(true)" class="p-2 text-slate-300 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <div class="flex-1 bg-zinc-900 border border-zinc-800 rounded-full px-4 py-2 flex items-center space-x-3">
+                    <span class="text-zinc-500 text-sm">🔍</span>
+                    <input type="text" placeholder="Search photos, files..." class="bg-transparent text-xs w-full focus:outline-none text-slate-200 placeholder-zinc-500">
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div id="tabPhotos" class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Your Files & Photos</h3>
+                    <button onclick="triggerUpload()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold shadow">＋ Upload</button>
+                </div>
+                <div id="fileGridContainer" class="grid grid-cols-3 gap-2">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square flex items-center justify-center text-[10px] text-zinc-600">No files</div>
+                </div>
+            </div>
+
+            <!-- RECYCLE BIN TAB -->
+            <div id="tabRecycle" class="hidden space-y-4">
+                <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-100">Recycle Bin</h3>
+                        <p class="text-[10px] text-zinc-400">Deleted items can be restored or cleared</p>
+                    </div>
+                </div>
+                <div id="recycleGridContainer" class="grid grid-cols-3 gap-2">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl aspect-square relative flex items-center justify-center text-[10px] text-zinc-600">
+                        <span>Empty</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bg-zinc-950 border-t border-zinc-900 py-2 px-6 flex justify-around items-center">
+            <button onclick="switchTab('photos')" class="flex flex-col items-center text-blue-400 space-y-1">
+                <span class="text-lg">🖼️</span>
+                <span class="text-[10px] font-medium">Photos</span>
+            </button>
+            <button onclick="switchTab('recycle')" class="flex flex-col items-center text-zinc-500 hover:text-zinc-300 space-y-1">
+                <span class="text-lg">🗑️</span>
+                <span class="text-[10px] font-medium">Recycle Bin</span>
+            </button>
+            <button onclick="openPricingModalFromDirect()" class="flex flex-col items-center text-amber-400 hover:text-amber-300 space-y-1">
+                <span class="text-lg">⚡</span>
+                <span class="text-[10px] font-medium">Upgrade</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- SIDE MENU DRAWER -->
+    <div id="sideDrawer" class="hidden fixed inset-0 z-50 flex">
+        <div class="bg-zinc-950 w-4/5 max-w-xs h-full border-r border-zinc-800 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
+            <div class="space-y-6">
+                <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+                    <div>
+                        <p id="drawerEmail" class="text-xs font-bold text-slate-200">User</p>
+                        <p id="drawerRole" class="text-[10px] text-blue-400 font-semibold mt-0.5">NORMAL USER</p>
+                        <p id="supremeOwnerIndicatorText" class="text-[9px] text-amber-400 font-bold mt-1">Supreme Owner: vs4539876@gmail.com</p>
+                    </div>
+                    <button onclick="toggleSidebar(false)" class="text-zinc-400 hover:text-white text-lg">✕</button>
+                </div>
+
+                <div class="bg-zinc-900 border border-zinc-800 p-3.5 rounded-2xl space-y-2">
+                    <div class="flex justify-between text-[11px] font-semibold text-zinc-300">
+                        <span>Storage Plan</span>
+                        <span id="storageText">0 GB used</span>
+                    </div>
+                    <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+                        <div id="storageBar" class="bg-blue-500 h-full w-[0%]" style="width: 10%;"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-1 text-xs">
+                    <button onclick="switchTab('photos'); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🖼️</span><span>My Files</span></button>
+                    <button onclick="switchTab('recycle'); toggleSidebar(false);" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>🗑️</span><span>Recycle Bin</span></button>
+                    <button onclick="openPricingModalFromMenu()" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-amber-400 flex items-center space-x-3"><span>⚡</span><span>Upgrade Membership</span></button>
+                    <a href="mailto:vs4539876@gmail.com" class="w-full text-left px-3 py-2.5 hover:bg-zinc-900 rounded-xl text-slate-300 flex items-center space-x-3"><span>💬</span><span>Customer Support</span></a>
+                    
+                    <!-- MASTER / SUPREME OWNER PANEL OPTION -->
+                    <div id="adminMenuOption" class="hidden pt-2 border-t border-zinc-800 space-y-1">
+                        <button onclick="openAdminPanelFromMenu()" class="w-full text-left px-3 py-2.5 bg-amber-500/10 text-amber-400 rounded-xl font-bold flex items-center space-x-3 border border-amber-500/20"><span>👑</span><span>Supreme Owner Panel</span></button>
+                        <button onclick="openStatsModalFromMenu()" class="w-full text-left px-3 py-2.5 bg-blue-500/10 text-blue-400 rounded-xl font-bold flex items-center space-x-3 border border-blue-500/20"><span>📊</span><span>View Users & Statistics</span></button>
+                        <button onclick="openPartnerRequestsModalFromMenu()" class="w-full text-left px-3 py-2.5 bg-purple-500/10 text-purple-400 rounded-xl font-bold flex items-center space-x-3 border border-purple-500/20"><span>📋</span><span>Partner Requests</span></button>
+                        <!-- PAYMENT ACCEPT REQUESTS OPTION -->
+                        <button onclick="openPaymentAcceptModalFromMenu()" class="w-full text-left px-3 py-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl font-bold flex items-center space-x-3 border border-emerald-500/20"><span>💰</span><span>Payment Accept Requests</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="handleLogout()" class="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-red-400 rounded-xl text-xs font-semibold border border-zinc-800">Logout</button>
+        </div>
+        <div class="flex-1 bg-black/60 backdrop-blur-sm" onclick="toggleSidebar(false)"></div>
+    </div>
+
+    <!-- SUPREME OWNER & ROLE MANAGEMENT PANEL -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 text-left space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-bold text-amber-400 flex items-center space-x-2"><span>👑 Make a Member / Roles Panel</span></h3>
+                <button onclick="closeAdminPanel()" class="text-zinc-400 hover:text-white">✕</button>
+            </div>
+            <div>
+                <input type="text" id="userSearchInput" onkeyup="filterUsers()" placeholder="Search username or email..." class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+            </div>
+            <div id="usersListContainer" class="space-y-3 max-h-60 overflow-y-auto text-xs"></div>
+            <button onclick="closeAdminPanel()" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-slate-200 rounded-xl text-xs font-bold">Close Panel</button>
+        </div>
+    </div>
+
+    <!-- STATISTICS & MEMBERS BREAKDOWN MODAL -->
+    <div id="statsModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-left space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-bold text-blue-400">📊 Users Statistics</h3>
+                <button onclick="closeStatsModal()" class="text-zinc-400 hover:text-white">✕</button>
+            </div>
+            <div id="statsContent" class="space-y-3 text-xs"></div>
+            <button onclick="closeStatsModal()" class="w-full py-2 bg-zinc-800 text-white rounded-xl text-xs font-bold">Close</button>
+        </div>
+    </div>
+
+    <!-- PARTNER REQUESTS MODAL -->
+    <div id="partnerRequestsModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 text-left space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-bold text-purple-400">📋 Partner Admin Requests</h3>
+                <button onclick="closePartnerRequestsModal()" class="text-zinc-400 hover:text-white">✕</button>
+            </div>
+            <div id="requestsListContainer" class="space-y-2 max-h-60 overflow-y-auto text-xs">
+                <p class="text-zinc-500 text-center py-4">No pending requests.</p>
+            </div>
+            <button onclick="closePartnerRequestsModal()" class="w-full py-2 bg-zinc-800 text-white rounded-xl text-xs font-bold">Close</button>
+        </div>
+    </div>
+
     <!-- PAYMENT ACCEPT REQUESTS MODAL -->
     <div id="paymentAcceptModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 text-left space-y-4 shadow-2xl">
