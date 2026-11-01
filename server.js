@@ -167,7 +167,7 @@ app.post('/api/admin/accept-payment', (req, res) => {
   res.json({ success: true, message: 'Membership successfully activated for the user!' });
 });
 
-// ⭐ Cancel Payment Request Route
+// Cancel Payment Request Route
 app.post('/api/admin/cancel-payment', (req, res) => {
   const { requestId } = req.body;
   const reqObj = paymentRequests.find(r => r.id === requestId);
